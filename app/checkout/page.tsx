@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { getCart, getCartTotalPrice, isCartValid } from '@/lib/cart'
+import { getCart, getCartTotalPrice } from '@/lib/cart'
 import { loadStripe } from '@stripe/stripe-js'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
@@ -24,7 +24,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     const cart = getCart()
-    if (!isCartValid(cart)) {
+    if (cart.items.length === 0) {
       router.push('/cart')
       return
     }

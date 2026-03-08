@@ -1,7 +1,3 @@
-import { MIN_ORDER_QUANTITY } from './constants'
-
-export { MIN_ORDER_QUANTITY }
-
 export interface CartItem {
   productId: string
   name: string
@@ -91,10 +87,5 @@ export function getCartTotalPrice(cart: Cart): number {
 }
 
 export function isCartValid(cart: Cart): boolean {
-  return getCartTotalQuantity(cart) >= MIN_ORDER_QUANTITY
-}
-
-export function getCartRemainingQuantity(cart: Cart): number {
-  const total = getCartTotalQuantity(cart)
-  return Math.max(0, MIN_ORDER_QUANTITY - total)
+  return cart.items.length > 0
 }

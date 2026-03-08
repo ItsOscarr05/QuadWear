@@ -11,8 +11,6 @@ import {
   getCartTotalQuantity,
   getCartTotalPrice,
   isCartValid,
-  getCartRemainingQuantity,
-  MIN_ORDER_QUANTITY,
 } from '@/lib/cart'
 
 export default function CartPage() {
@@ -50,7 +48,6 @@ export default function CartPage() {
   const totalQuantity = getCartTotalQuantity(cart)
   const totalPrice = getCartTotalPrice(cart)
   const isValid = isCartValid(cart)
-  const remaining = getCartRemainingQuantity(cart)
 
   if (!isClient) {
     return (
@@ -73,18 +70,6 @@ export default function CartPage() {
         </div>
       ) : (
         <>
-          {/* Bulk validation message */}
-          {!isValid && (
-            <div className="bg-accent/20 border-2 border-accent/40 rounded-lg p-4 mb-6">
-              <p className="font-semibold text-lg mb-2">
-                Add {remaining} more shirt{remaining !== 1 ? 's' : ''} to reach minimum ({MIN_ORDER_QUANTITY})
-              </p>
-              <p className="text-sm text-gray-700">
-                You're {remaining} shirt{remaining !== 1 ? 's' : ''} away — mix designs to reach {MIN_ORDER_QUANTITY}!
-              </p>
-            </div>
-          )}
-
           {/* Cart Items */}
           <div className="space-y-4 mb-8">
             {cart.items.map((item) => (
@@ -178,13 +163,7 @@ export default function CartPage() {
                 </Link>
                 <button
                   onClick={() => router.push('/checkout')}
-                  disabled={!isValid}
-                  className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-all ${
-                    isValid
-                      ? 'btn-primary'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                  title={!isValid ? `Add ${remaining} more shirt${remaining !== 1 ? 's' : ''} to checkout` : ''}
+                  className="flex-1 btn-primary"
                 >
                   Checkout
                 </button>

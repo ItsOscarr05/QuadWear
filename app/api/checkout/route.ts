@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
-import { MIN_ORDER_QUANTITY } from '@/lib/constants'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { items, email, shipping } = body
-
-    // Validate minimum order quantity
-    const totalQuantity = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
-    if (totalQuantity < MIN_ORDER_QUANTITY) {
-      return NextResponse.json(
-        { error: `Minimum order quantity is ${MIN_ORDER_QUANTITY} shirts` },
-        { status: 400 }
-      )
-    }
 
     // Calculate total
     const totalCents = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0)

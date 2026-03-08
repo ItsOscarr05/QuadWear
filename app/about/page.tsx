@@ -15,8 +15,7 @@ export default function AboutPage() {
         
         <p className="text-gray-700 mb-6">
           Perfect for study groups, clubs, classes, or just showing off your major pride. Order
-          in bulk (minimum 12 shirts) and mix designs and sizes to create the perfect order for
-          your group.
+          your favorite designs and sizes to create the perfect look for you or your group.
         </p>
         
         <h2 className="text-2xl font-bold mt-8 mb-4">Our Mission</h2>

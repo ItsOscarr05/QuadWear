@@ -45,7 +45,7 @@ export default function HomePage() {
             Choose your university → pick your major → wear it.
           </p>
           <p className="text-lg text-gray-600 mb-8">
-            Perfect for study groups, clubs, and classes — min 12 shirts per order
+            Perfect for study groups, clubs, and classes
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/shop" className="btn-primary text-lg">
@@ -70,9 +70,6 @@ export default function HomePage() {
             </div>
             <div>
               <p className="font-semibold text-sm md:text-base">Student-designed</p>
-            </div>
-            <div>
-              <p className="font-semibold text-sm md:text-base">Min 12 — mix & match</p>
             </div>
           </div>
         </div>
@@ -156,7 +153,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-bold text-lg mb-2">Order & Wear</h3>
               <p className="text-gray-600">
-                Order 12+ shirts (mix designs & sizes) and rep your major!
+                Order your favorite designs and rep your major!
               </p>
             </div>
           </div>

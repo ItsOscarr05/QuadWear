@@ -107,6 +107,35 @@ export default function ShopPage() {
     }
   }
 
+  // Hardcoded Virginia universities
+  const virginiaUniversities = [
+    'UVA',
+    'Virginia Tech',
+    'JMU',
+    'George Mason',
+    'VCU',
+    'ODU',
+    'University of Richmond',
+    'William & Mary',
+    'Radford',
+    'Longwood',
+  ]
+
+  // Hardcoded top 10 majors
+  const topMajors = [
+    'Business',
+    'Psychology',
+    'Computer Science',
+    'Nursing',
+    'Biology',
+    'Communications',
+    'Education',
+    'Engineering',
+    'Criminal Justice',
+    'Marketing',
+  ]
+
+  // For filters, use dynamic lists from products
   const universities = Array.from(new Set(products.map((p) => p.university)))
   const majors = Array.from(new Set(products.map((p) => p.major)))
 
@@ -125,7 +154,7 @@ export default function ShopPage() {
                 className="w-full border-2 border-primary rounded-lg px-4 py-2"
               >
                 <option value="">Select university...</option>
-                {universities.map((uni) => (
+                {virginiaUniversities.map((uni) => (
                   <option key={uni} value={uni}>
                     {uni}
                   </option>
@@ -141,16 +170,11 @@ export default function ShopPage() {
                 disabled={!selectedUniversity}
               >
                 <option value="">Select major...</option>
-                {majors
-                  .filter((major) => {
-                    if (!selectedUniversity) return true
-                    return products.some((p) => p.university === selectedUniversity && p.major === major)
-                  })
-                  .map((major) => (
-                    <option key={major} value={major}>
-                      {major}
-                    </option>
-                  ))}
+                {topMajors.map((major) => (
+                  <option key={major} value={major}>
+                    {major}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -168,13 +192,6 @@ export default function ShopPage() {
           </div>
         </div>
       )}
-
-      {/* Bulk order banner */}
-      <div className="bg-accent/20 border-2 border-accent/40 rounded-lg p-3 mb-6 text-center">
-        <p className="text-sm font-semibold">
-          Min 12 shirts per order — mix designs & sizes.
-        </p>
-      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters sidebar */}

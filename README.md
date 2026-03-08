@@ -4,10 +4,9 @@ A modern e-commerce website for QuadWear, selling hand-drawn university and majo
 
 ## Features
 
-- **Bulk Ordering**: Minimum 12 shirts per order (mix designs & sizes)
 - **Shop Catalog**: Filter by university, major, size, and price
 - **Product Pages**: Detailed product views with size guides
-- **Shopping Cart**: Real-time cart with bulk validation
+- **Shopping Cart**: Real-time cart with quantity management
 - **Checkout**: Stripe integration for secure payments
 - **Collection Pages**: Auto-generated pages for universities and majors
 - **Wishlist**: Save products for later (localStorage)

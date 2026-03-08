@@ -38,13 +38,10 @@ export default function ShippingPage() {
         </section>
 
         <section className="card-sticker">
-          <h2 className="text-2xl font-bold mb-4">Bulk Orders</h2>
+          <h2 className="text-2xl font-bold mb-4">Custom Orders</h2>
           <div className="space-y-4 text-gray-700">
             <p>
-              <strong>Minimum Order:</strong> All orders require a minimum of 12 shirts. You can mix designs, sizes, and colors to reach the minimum.
-            </p>
-            <p>
-              <strong>Custom Orders:</strong> Need a custom design or larger quantity? Contact us for special pricing.
+              <strong>Custom Designs:</strong> Need a custom design or larger quantity? Contact us for special pricing.
             </p>
           </div>
         </section>

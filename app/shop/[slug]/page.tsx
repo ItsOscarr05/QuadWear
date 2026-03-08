@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { addToCart, getCartRemainingQuantity } from '@/lib/cart'
-import { MIN_ORDER_QUANTITY } from '@/lib/constants'
+import { addToCart } from '@/lib/cart'
 
 interface Product {
   id: string
@@ -32,23 +31,10 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('M')
   const [quantity, setQuantity] = useState(1)
   const [showSizeHelp, setShowSizeHelp] = useState(false)
-  const [remainingQty, setRemainingQty] = useState(0)
 
   useEffect(() => {
     fetchProduct()
-    updateRemainingQty()
   }, [])
-
-  useEffect(() => {
-    updateRemainingQty()
-  }, [quantity])
-
-  const updateRemainingQty = () => {
-    const { getCart } = require('@/lib/cart')
-    const cart = getCart()
-    const remaining = getCartRemainingQuantity(cart)
-    setRemainingQty(remaining)
-  }
 
   const fetchProduct = async () => {
     try {
@@ -143,18 +129,6 @@ export default function ProductDetailPage() {
             ${(product.price / 100).toFixed(2)}
             <span className="text-lg text-gray-500 font-normal"> per shirt</span>
           </p>
-
-          {/* Bulk order callout */}
-          <div className="bg-accent/20 border-2 border-accent/40 rounded-lg p-4 mb-6">
-            <p className="text-sm font-semibold mb-1">
-              Min {MIN_ORDER_QUANTITY} shirts total per order — mix designs & sizes.
-            </p>
-            {remainingQty > 0 && (
-              <p className="text-xs text-gray-600">
-                Add {remainingQty} more shirt{remainingQty !== 1 ? 's' : ''} to reach the minimum.
-              </p>
-            )}
-          </div>
 
           {product.description && (
             <p className="text-gray-700 mb-6">{product.description}</p>

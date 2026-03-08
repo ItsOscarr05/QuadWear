@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Int      // cents
+  material    String?  // "100% cotton"
+  fit         String?  // "midweight", "relaxed"
+  designImage String   // hand-drawn preview URL
+  mockupImage String   // shirt mockup URL
+  badges      String   // JSON array as string: ["New", "Best Seller", "Limited Run", "Campus Favorite"]
+  university  String   // "JMU"
+  major       String   // "Computer Science"
+  colors      String   // JSON array as string: ["purple", "white"]
+  sizes       String   // JSON object as string: {"S": 10, "M": 15, "L": 8, ...}
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique
+  email           String
+  status          String   // "pending", "paid", "shipped"
+  totalCents      Int
+  items           String   // JSON array as string
+  shipping        String   // JSON object as string
+  stripePaymentId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

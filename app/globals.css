@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Nunito', system-ui, sans-serif;
+  --font-accent: 'Caveat', cursive;
+}
+
+@layer base {
+  body {
+    @apply bg-neutral-offwhite text-neutral-charcoal;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+    @apply hover:bg-primary-dark active:scale-95;
+    box-shadow: 0 2px 4px rgba(123, 45, 142, 0.2);
+    border: 2px solid rgba(123, 45, 142, 0.1);
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+    @apply hover:bg-primary hover:text-white active:scale-95;
+  }
+
+  .card-sticker {
+    @apply bg-white rounded-xl p-4 shadow-md transition-all duration-200;
+    border: 2px solid rgba(123, 45, 142, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(123, 45, 142, 0.1);
+  }
+
+  .card-sticker:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(123, 45, 142, 0.15);
+  }
+
+  .marker-highlight {
+    @apply relative;
+  }
+
+  .marker-highlight::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-2 bg-accent opacity-40 -z-10;
+    transform: skewX(-2deg);
+  }
+
+  .sketch-line {
+    border-top: 2px dashed rgba(123, 45, 142, 0.3);
+    border-image: none;
+  }
+}

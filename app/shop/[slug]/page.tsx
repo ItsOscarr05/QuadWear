@@ -39,7 +39,8 @@ export default function ProductDetailPage() {
   const fetchProduct = async () => {
     try {
       const response = await fetch('/api/products')
-      const products = await response.json()
+      const data = await response.json()
+      const products = Array.isArray(data) ? data : []
       const found = products.find((p: Product) => p.slug === params.slug)
       if (found) {
         setProduct(found)

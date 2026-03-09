@@ -32,8 +32,9 @@ export default function UniversityPage() {
     try {
       const response = await fetch(`/api/products?university=${university}`)
       const data = await response.json()
-      setProducts(data)
-      const uniqueMajors = Array.from(new Set(data.map((p: Product) => p.major)))
+      const productList = Array.isArray(data) ? data : []
+      setProducts(productList)
+      const uniqueMajors = Array.from(new Set(productList.map((p: Product) => p.major)))
       setMajors(uniqueMajors)
       setLoading(false)
     } catch (error) {

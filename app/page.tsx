@@ -26,7 +26,8 @@ export default function HomePage() {
   const fetchFeaturedProducts = async () => {
     try {
       const response = await fetch('/api/products?university=JMU')
-      const products = await response.json()
+      const data = await response.json()
+      const products = Array.isArray(data) ? data : []
       setFeaturedProducts(products.slice(0, 4)) // Show first 4 JMU products
     } catch (error) {
       console.error('Error fetching featured products:', error)

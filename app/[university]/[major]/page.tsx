@@ -35,7 +35,8 @@ export default function MajorCollectionPage() {
     try {
       const response = await fetch(`/api/products?university=${university}&major=${major}`)
       const data = await response.json()
-      setProducts(data)
+      const productList = Array.isArray(data) ? data : []
+      setProducts(productList)
       setLoading(false)
     } catch (error) {
       console.error('Error fetching products:', error)

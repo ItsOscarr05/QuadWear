@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
@@ -6,7 +7,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4 font-accent">QuadWear</h3>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/quadwear-logo.png"
+                alt="QuadWear"
+                width={100}
+                height={32}
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
             <p className="text-sm text-gray-300">
               Hand-drawn tees for your major.
             </p>
@@ -48,20 +57,12 @@ export default function Footer() {
             <h4 className="font-semibold mb-4">Connect</h4>
             <div className="flex space-x-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/quadwear_clothing?igsh=aWF2OWlrOTNkamo2"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-accent transition-colors"
               >
                 Instagram
-              </a>
-              <a
-                href="https://tiktok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-accent transition-colors"
-              >
-                TikTok
               </a>
             </div>
             <div className="mt-4">

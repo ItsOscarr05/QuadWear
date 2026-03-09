@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Override Next.js dev portal positioning to prevent layout issues */
+nextjs-portal {
+  left: unset;
+}
+
 :root {
   --font-sans: 'Nunito', system-ui, sans-serif;
   --font-accent: 'Caveat', cursive;

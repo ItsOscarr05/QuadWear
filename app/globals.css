@@ -8,53 +8,75 @@ nextjs-portal {
 }
 
 :root {
-  --font-sans: 'Nunito', system-ui, sans-serif;
-  --font-accent: 'Caveat', cursive;
+  --font-heading: 'Cabin Sketch', cursive;
+  --font-body: 'Kalam', cursive;
 }
 
 @layer base {
   body {
-    @apply bg-neutral-offwhite text-neutral-charcoal;
+    @apply bg-white text-black font-body;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+    @apply bg-primary text-white px-8 py-4 rounded-lg font-bold transition-all duration-200;
     @apply hover:bg-primary-dark active:scale-95;
-    box-shadow: 0 2px 4px rgba(123, 45, 142, 0.2);
-    border: 2px solid rgba(123, 45, 142, 0.1);
+    border: 4px solid #000000;
+    box-shadow: 0 4px 0 #000000;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 2px 0 #000000;
+    transform: translateY(2px);
   }
 
   .btn-secondary {
-    @apply bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+    @apply bg-white text-black border-4 border-primary px-8 py-4 rounded-lg font-bold transition-all duration-200;
     @apply hover:bg-primary hover:text-white active:scale-95;
+    box-shadow: 0 4px 0 #000000;
+  }
+
+  .btn-secondary:hover {
+    box-shadow: 0 2px 0 #000000;
+    transform: translateY(2px);
   }
 
   .card-sticker {
-    @apply bg-white rounded-xl p-4 shadow-md transition-all duration-200;
-    border: 2px solid rgba(123, 45, 142, 0.15);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(123, 45, 142, 0.1);
+    @apply bg-white rounded-lg p-6 transition-all duration-200;
+    border: 4px solid #000000;
+    box-shadow: 0 4px 0 #000000;
   }
 
   .card-sticker:hover {
-    @apply shadow-lg;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(123, 45, 142, 0.15);
+    box-shadow: 0 2px 0 #000000;
+    transform: translateY(2px);
   }
 
-  .marker-highlight {
-    @apply relative;
+  .section-black {
+    @apply bg-black text-white;
   }
 
-  .marker-highlight::after {
+  .purple-accent {
+    @apply border-primary;
+    border-width: 4px;
+  }
+
+  .gold-accent {
+    @apply text-accent;
+  }
+
+  .heading-accent {
+    @apply relative inline-block;
+  }
+
+  .heading-accent::after {
     content: '';
-    @apply absolute bottom-0 left-0 right-0 h-2 bg-accent opacity-40 -z-10;
-    transform: skewX(-2deg);
-  }
-
-  .sketch-line {
-    border-top: 2px dashed rgba(123, 45, 142, 0.3);
-    border-image: none;
+    @apply absolute bottom-0 left-0 right-0 h-1 bg-primary;
+    transform: translateY(4px);
   }
 }

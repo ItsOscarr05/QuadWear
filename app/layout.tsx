@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Nunito, Caveat } from "next/font/google";
+import { Cabin_Sketch, Kalam } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
-const nunito = Nunito({
+const cabinSketch = Cabin_Sketch({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-sans",
+  weight: ["400"],
+  variable: "--font-heading",
 });
 
-const caveat = Caveat({
+const kalam = Kalam({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-accent",
+  weight: ["300", "400", "700"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${nunito.variable} ${caveat.variable}`}>
+    <html lang="en" className={`${cabinSketch.variable} ${kalam.variable}`}>
       <body className="min-h-screen flex flex-col">
         <Nav />
         <main className="flex-grow">{children}</main>

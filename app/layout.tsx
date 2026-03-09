@@ -19,6 +19,14 @@ const kalam = Kalam({
 export const metadata: Metadata = {
   title: "QuadWear - Hand-drawn tees for your major",
   description: "Choose your university → pick your major → wear it. Hand-drawn t-shirts designed for students.",
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+  },
 };
 
 export default function RootLayout({

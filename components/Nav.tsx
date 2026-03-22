@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getCart, getCartTotalQuantity } from "@/lib/cart";
+import { UNIVERSITIES } from "@/lib/universities";
+import { MAJORS } from "@/lib/majors";
 
 export default function Nav() {
   const [cartCount, setCartCount] = useState(0);
@@ -49,67 +51,32 @@ export default function Nav() {
               <button className="text-black hover:text-primary transition-colors font-bold text-lg">
                 Universities
               </button>
-              <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <Link
-                  href="/uva"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  UVA
-                </Link>
-                <Link
-                  href="/virginia-tech"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  Virginia Tech
-                </Link>
-                <Link
-                  href="/jmu"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  JMU
-                </Link>
-                <Link
-                  href="/george-mason"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  George Mason
-                </Link>
-                <Link
-                  href="/vcu"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  VCU
-                </Link>
-                <Link
-                  href="/odu"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  ODU
-                </Link>
-                <Link
-                  href="/university-of-richmond"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  University of Richmond
-                </Link>
-                <Link
-                  href="/william-mary"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  William & Mary
-                </Link>
-                <Link
-                  href="/radford"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  Radford
-                </Link>
-                <Link
-                  href="/longwood"
-                  className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
-                >
-                  Longwood
-                </Link>
+              <div className="absolute top-full left-0 mt-2 w-56 max-h-80 overflow-y-auto bg-white rounded-lg shadow-lg border-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                {UNIVERSITIES.map((u) => (
+                  <Link
+                    key={u.slug}
+                    href={`/shop/university/${u.slug}`}
+                    className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
+                  >
+                    {u.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="relative group">
+              <button className="text-black hover:text-primary transition-colors font-bold text-lg">
+                Majors
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-56 max-h-80 overflow-y-auto bg-white rounded-lg shadow-lg border-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                {MAJORS.map((m) => (
+                  <Link
+                    key={m.slug}
+                    href={`/shop/major/${m.slug}`}
+                    className="block px-4 py-2 hover:bg-primary hover:text-white text-black font-semibold border-b-2 border-black last:border-b-0"
+                  >
+                    {m.name}
+                  </Link>
+                ))}
               </div>
             </div>
             <Link

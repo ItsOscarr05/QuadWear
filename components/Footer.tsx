@@ -30,7 +30,10 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/jmu" className="hover:text-accent transition-colors">
+                <Link
+                  href="/shop/university/jmu"
+                  className="hover:text-accent transition-colors"
+                >
                   JMU Collection
                 </Link>
               </li>

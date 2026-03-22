@@ -16,8 +16,10 @@ interface QuickViewModalProps {
     badges: string
     university: string
     major: string
-    colors: string
-    sizes: string
+    /** JSON array string; optional when opening from grids that omit inventory fields */
+    colors?: string
+    /** JSON object string; optional when opening from grids that omit inventory fields */
+    sizes?: string
   }
   onClose: () => void
   onAddToCart: () => void

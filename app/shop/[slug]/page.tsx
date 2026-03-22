@@ -5,6 +5,8 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { addToCart } from '@/lib/cart'
+import { getUniversityByName } from '@/lib/universities'
+import { majorSlugFromName } from '@/lib/majors'
 
 interface Product {
   id: string
@@ -94,6 +96,12 @@ export default function ProductDetailPage() {
   const colors = JSON.parse(product.colors || '[]')
   const sizes = JSON.parse(product.sizes || '{}')
   const availableSizes = Object.keys(sizes).filter((size) => sizes[size] > 0)
+
+  const uniMeta = getUniversityByName(product.university)
+  const uniSlug =
+    uniMeta?.slug ??
+    product.university.toLowerCase().replace(/\s+/g, '-')
+  const sameSchoolMajorHref = `/shop/university/${uniSlug}?major=${encodeURIComponent(majorSlugFromName(product.major))}`
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -216,10 +224,7 @@ export default function ProductDetailPage() {
       {/* You might also like */}
       <div className="border-t-2 border-gray-200 pt-8">
         <h2 className="text-2xl font-bold mb-6">You might also like</h2>
-        <Link
-          href={`/${product.university.toLowerCase()}/${product.major.toLowerCase().replace(/\s+/g, '-')}`}
-          className="text-primary hover:underline"
-        >
+        <Link href={sameSchoolMajorHref} className="text-primary hover:underline">
           View all {product.major} designs at {product.university} →
         </Link>
       </div>

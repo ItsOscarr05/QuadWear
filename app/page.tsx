@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { MAJORS } from "@/lib/majors";
 
 interface Product {
   id: string;
@@ -43,19 +44,6 @@ export default function HomePage() {
     setEmail("");
   };
 
-  const topMajors = [
-    "Business",
-    "Psychology",
-    "Computer Science",
-    "Nursing",
-    "Biology",
-    "Communications",
-    "Education",
-    "Engineering",
-    "Criminal Justice",
-    "Marketing",
-  ];
-
   const faqs = [
     {
       question: "How long does shipping take?",
@@ -94,14 +82,22 @@ export default function HomePage() {
           <p className="text-xl md:text-2xl text-white/90 mb-4 font-medium">
             Same Old Major, Brand New Style.
           </p>
-          <p className="text-lg text-white/80 mb-10">
+          <p className="text-lg text-white/80 mb-4">
             Perfect for study groups, clubs, and classes
           </p>
+          <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+            We believe your major deserves more than generic merch—so we create
+            hand-drawn designs that celebrate what you actually study, at the
+            schools you call home.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/shop" className="btn-primary text-lg inline-block">
+            <Link
+              href="/shop/university"
+              className="btn-primary text-lg inline-block"
+            >
               Shop by University
             </Link>
-            <Link href="/shop" className="btn-secondary text-lg inline-block">
+            <Link href="/shop/major" className="btn-secondary text-lg inline-block">
               Browse all Majors
             </Link>
           </div>
@@ -170,7 +166,10 @@ export default function HomePage() {
               })}
             </div>
             <div className="text-center mt-12">
-              <Link href="/jmu" className="btn-secondary inline-block">
+              <Link
+                href="/shop/university/jmu"
+                className="btn-secondary inline-block"
+              >
                 View All JMU Designs
               </Link>
             </div>
@@ -446,13 +445,13 @@ export default function HomePage() {
             Shop by Major
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {topMajors.map((major) => (
+            {MAJORS.map((m) => (
               <Link
-                key={major}
-                href={`/shop?major=${major}`}
+                key={m.slug}
+                href={`/shop/major/${m.slug}`}
                 className="bg-white rounded-lg p-6 text-center transition-all duration-200 border-4 border-primary hover:border-accent"
               >
-                <p className="font-bold text-lg text-black">{major}</p>
+                <p className="font-bold text-lg text-black">{m.name}</p>
               </Link>
             ))}
           </div>

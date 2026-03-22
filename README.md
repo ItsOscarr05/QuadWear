@@ -38,33 +38,62 @@ npx prisma generate
 npx prisma db push
 ```
 
-4. Run the development server:
+4. (Optional) Seed one example product for local development:
+```bash
+npx prisma db seed
+```
+
+5. Run the development server:
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000)
+6. Open [http://localhost:3000](http://localhost:3000)
 
-## Adding Products
+## Adding products (checklist)
 
-Products can be added manually via Prisma Studio:
-```bash
-npx prisma studio
-```
+Products can be added via **Prisma Studio** (`npx prisma studio`), **`npx prisma db seed`** (example row only), or any SQL/SQLite tool against `prisma/dev.db`.
 
-Or by directly inserting into the database. Product schema:
+### Canonical `university` and `major` strings
+
+Filters and shop URLs rely on **exact** matches:
+
+- **`university`** must equal the `name` field from [`lib/universities.ts`](lib/universities.ts) (e.g. `"JMU"`, `"UVA"`, `"Virginia Tech"`). Do **not** use `fullName`, `slug`, or abbreviations unless they match `name` exactly.
+- **`major`** should match the `name` field from [`lib/majors.ts`](lib/majors.ts) (e.g. `"Computer Science"`, `"Nursing"`). If you use a major not in that list, filters still work, but major landing pages and slugs use a fallback slug derived from the string.
+
+### JSON fields (copy-paste examples)
+
+Store these as **strings** in the database (what Prisma shows as `String` fields):
+
+| Field | Example value |
+|-------|----------------|
+| `badges` | `["New","Best Seller"]` |
+| `colors` | `["purple","white"]` |
+| `sizes` | `{"S":10,"M":15,"L":8,"XL":5}` |
+
+Use **uppercase** size keys (`S`, `M`, `L`, `XL`, `XXL`) to match the product page and cart. Values are **stock counts** (integers ≥ 0).
+
+### Images
+
+Use paths under [`public/`](public/) (e.g. `/products/my-shirt-mockup.png`) or any `https://` URL. The app is configured to allow remote images in [`next.config.js`](next.config.js).
+
+### Featured products on the home page
+
+The landing page loads featured products with `?university=JMU` (see [`app/page.tsx`](app/page.tsx)). Either add products with `university` set to **`JMU`**, or change that fetch to another canonical `name` / remove the filter once you have a broader catalog.
+
+### Product schema (reference)
+
 - `name`: Product name
-- `slug`: URL-friendly identifier (must be unique)
+- `slug`: URL-friendly identifier (must be unique); product page is `/shop/[slug]`
 - `price`: Price in cents
-- `university`: University name (e.g., "JMU")
-- `major`: Major name (e.g., "Computer Science")
+- `university`: Canonical university `name` (see above)
+- `major`: Canonical major `name` (see above)
 - `designImage`: URL to hand-drawn preview image
 - `mockupImage`: URL to shirt mockup image
-- `badges`: JSON array string (e.g., `["New", "Best Seller"]`)
-- `colors`: JSON array string (e.g., `["purple", "white"]`)
-- `sizes`: JSON object string (e.g., `{"S": 10, "M": 15, "L": 8}`)
-- `material`: Optional (e.g., "100% cotton")
-- `fit`: Optional (e.g., "midweight")
+- `badges`: JSON array string
+- `colors`: JSON array string
+- `sizes`: JSON object string (size → stock count)
+- `description`, `material`, `fit`: Optional
 
 ## Environment Variables
 

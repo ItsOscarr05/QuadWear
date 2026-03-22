@@ -12,7 +12,7 @@ export default function ShopByUniversityPage() {
           ← Back to Shop
         </Link>
         <h1 className="text-4xl md:text-5xl font-bold text-black">
-          Shop by University
+          Shop by School
         </h1>
         <p className="text-lg text-gray-600 mt-3 max-w-2xl">
           Choose your school to see all shirts we carry for that campus.
@@ -38,7 +38,7 @@ export default function ShopByUniversityPage() {
                 {u.abbreviation}
               </p>
               <p className="font-bold text-lg text-black group-hover:text-primary transition-colors">
-                {u.name}
+                {u.fullName}
               </p>
               <p className="text-sm text-gray-600 mt-2">
                 View collection →

@@ -6,19 +6,10 @@ import { useState, useEffect } from 'react'
 import { addToCart } from '@/lib/cart'
 import { addToWishlist, removeFromWishlist, isInWishlist } from '@/lib/wishlist'
 import QuickViewModal from './QuickViewModal'
+import type { ProductCatalog } from '@/lib/types/product'
 
 interface ProductCardProps {
-  product: {
-    id: string
-    name: string
-    slug: string
-    price: number
-    designImage: string
-    mockupImage: string
-    badges: string
-    university: string
-    major: string
-  }
+  product: ProductCatalog
 }
 
 export default function ProductCard({ product }: ProductCardProps) {

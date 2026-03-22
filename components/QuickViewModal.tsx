@@ -3,24 +3,10 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { addToCart } from '@/lib/cart'
+import type { ProductQuickView } from '@/lib/types/product'
 
 interface QuickViewModalProps {
-  product: {
-    id: string
-    name: string
-    slug: string
-    price: number
-    description?: string
-    designImage: string
-    mockupImage: string
-    badges: string
-    university: string
-    major: string
-    /** JSON array string; optional when opening from grids that omit inventory fields */
-    colors?: string
-    /** JSON object string; optional when opening from grids that omit inventory fields */
-    sizes?: string
-  }
+  product: ProductQuickView
   onClose: () => void
   onAddToCart: () => void
 }

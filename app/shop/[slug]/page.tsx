@@ -7,55 +7,56 @@ import Link from 'next/link'
 import { addToCart } from '@/lib/cart'
 import { getUniversityByName } from '@/lib/universities'
 import { majorSlugFromName } from '@/lib/majors'
-
-interface Product {
-  id: string
-  name: string
-  slug: string
-  price: number
-  description?: string
-  material?: string
-  fit?: string
-  designImage: string
-  mockupImage: string
-  badges: string
-  university: string
-  major: string
-  colors: string
-  sizes: string
-}
+import type { ProductFromApi } from '@/lib/types/product'
 
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const [product, setProduct] = useState<Product | null>(null)
+  const [product, setProduct] = useState<ProductFromApi | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedSize, setSelectedSize] = useState('M')
   const [quantity, setQuantity] = useState(1)
   const [showSizeHelp, setShowSizeHelp] = useState(false)
 
-  useEffect(() => {
-    fetchProduct()
-  }, [])
+  const slug = params.slug as string
 
-  const fetchProduct = async () => {
-    try {
-      const response = await fetch('/api/products')
-      const data = await response.json()
-      const products = Array.isArray(data) ? data : []
-      const found = products.find((p: Product) => p.slug === params.slug)
-      if (found) {
+  useEffect(() => {
+    let cancelled = false
+
+    const fetchProduct = async () => {
+      setLoading(true)
+      try {
+        const response = await fetch(
+          `/api/products/${encodeURIComponent(slug)}`,
+        )
+        if (response.status === 404) {
+          if (!cancelled) setProduct(null)
+          return
+        }
+        if (!response.ok) {
+          if (!cancelled) setProduct(null)
+          return
+        }
+        const found = (await response.json()) as ProductFromApi
+        if (cancelled) return
         setProduct(found)
         const sizes = JSON.parse(found.sizes || '{}')
-        const firstAvailableSize = Object.keys(sizes).find((s) => sizes[s] > 0) || 'M'
+        const firstAvailableSize =
+          Object.keys(sizes).find((s) => sizes[s] > 0) || 'M'
         setSelectedSize(firstAvailableSize)
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        if (!cancelled) setProduct(null)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      setLoading(false)
-    } catch (error) {
-      console.error('Error fetching product:', error)
-      setLoading(false)
     }
-  }
+
+    fetchProduct()
+    return () => {
+      cancelled = true
+    }
+  }, [slug])
 
   const handleAddToCart = () => {
     if (!product) return

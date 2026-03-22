@@ -6,18 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import { getUniversityBySlug } from "@/lib/universities";
 import { majorSlugFromName } from "@/lib/majors";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  designImage: string;
-  mockupImage: string;
-  badges: string;
-  university: string;
-  major: string;
-}
+import type { ProductCatalog } from "@/lib/types/product";
 
 export default function UniversityShopClient() {
   const params = useParams();
@@ -26,7 +15,7 @@ export default function UniversityShopClient() {
   const universityConfig = getUniversityBySlug(slug);
   const majorFilterSlug = searchParams.get("major");
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductCatalog[]>([]);
   const [loading, setLoading] = useState(true);
 
   const universityName = universityConfig?.name ?? "";
@@ -41,8 +30,8 @@ export default function UniversityShopClient() {
         const res = await fetch(
           `/api/products?university=${encodeURIComponent(universityName)}`
         );
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+        const data = (await res.json()) as unknown;
+        setProducts(Array.isArray(data) ? (data as ProductCatalog[]) : []);
       } catch {
         setProducts([]);
       } finally {
@@ -67,9 +56,9 @@ export default function UniversityShopClient() {
   if (!universityConfig) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <p className="text-lg text-gray-600 mb-6">University not found.</p>
+        <p className="text-lg text-gray-600 mb-6">School not found.</p>
         <Link href="/shop/university" className="btn-primary inline-block">
-          Back to universities
+          Back to schools
         </Link>
       </div>
     );
@@ -83,7 +72,7 @@ export default function UniversityShopClient() {
         href="/shop/university"
         className="text-sm font-semibold text-primary hover:underline mb-6 inline-block"
       >
-        ← All universities
+        ← All schools
       </Link>
 
       <div
@@ -94,10 +83,10 @@ export default function UniversityShopClient() {
         }}
       >
         <h1 className="text-4xl font-bold text-black mb-2">
-          {universityConfig.name}
+          {universityConfig.fullName}
         </h1>
         <p className="text-gray-600">
-          Hand-drawn major shirts for {universityConfig.name} students -{" "}
+          Hand-drawn major shirts for {universityConfig.fullName} students -{" "}
           {universityConfig.mascotCheer}
         </p>
       </div>
@@ -146,7 +135,7 @@ export default function UniversityShopClient() {
           <p className="text-gray-500 text-lg">
             {majorFilterSlug
               ? "No products for this major at this school yet."
-              : `No products found for ${universityConfig.name} yet.`}
+              : `No products found for ${universityConfig.fullName} yet.`}
           </p>
         </div>
       ) : (

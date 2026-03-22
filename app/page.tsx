@@ -4,21 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MAJORS } from "@/lib/majors";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  mockupImage: string;
-  designImage: string;
-  university: string;
-  major: string;
-  badges: string;
-}
+import type { ProductCatalog } from "@/lib/types/product";
 
 export default function HomePage() {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<ProductCatalog[]>([]);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [email, setEmail] = useState("");
 
@@ -29,8 +18,8 @@ export default function HomePage() {
   const fetchFeaturedProducts = async () => {
     try {
       const response = await fetch("/api/products?university=JMU");
-      const data = await response.json();
-      const products = Array.isArray(data) ? data : [];
+      const data = (await response.json()) as unknown;
+      const products = Array.isArray(data) ? (data as ProductCatalog[]) : [];
       setFeaturedProducts(products.slice(0, 4));
     } catch (error) {
       console.error("Error fetching featured products:", error);
@@ -80,7 +69,7 @@ export default function HomePage() {
             Represent your major authentically.
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-4 font-medium">
-            Same Old Major, Brand New Style.
+            Same Old Majors, Brand New Styles.
           </p>
           <p className="text-lg text-white/80 mb-4">
             Perfect for study groups, clubs, and classes
@@ -97,7 +86,10 @@ export default function HomePage() {
             >
               Shop by University
             </Link>
-            <Link href="/shop/major" className="btn-secondary text-lg inline-block">
+            <Link
+              href="/shop/major"
+              className="btn-secondary text-lg inline-block"
+            >
               Browse all Majors
             </Link>
           </div>
@@ -310,11 +302,10 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="font-bold text-xl mb-3 text-white">
-                Choose Your University
+                Choose Your School
               </h3>
               <p className="text-white/80">
-                Select your campus from our growing list of Virginia
-                universities.
+                Select your campus from our growing list of Virginia schools.
               </p>
             </div>
             <div className="text-center">

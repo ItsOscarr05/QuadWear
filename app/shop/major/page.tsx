@@ -33,8 +33,7 @@ export default function ShopByMajorPage() {
           Shop by Major
         </h1>
         <p className="text-lg text-gray-600 mt-3 max-w-2xl">
-          Pick your field of study to see designs from every university we
-          carry.
+          Pick your field of study to see designs from every school we carry.
         </p>
       </div>
 

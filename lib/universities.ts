@@ -1,7 +1,13 @@
 export interface University {
   /** Exact string stored on Product.university and used in API queries */
   name: string;
+  /**
+   * Display name for search and cards. Keep leading “University of …” (e.g. UVA).
+   * Drop a trailing “ University” when the official name is “… University” (e.g. George Mason).
+   */
+  fullName: string;
   slug: string;
+  /** Shorthand shown on university cards only—not used in nav search */
   abbreviation: string;
   primaryColor: string;
   secondaryColor: string;
@@ -12,6 +18,7 @@ export interface University {
 export const UNIVERSITIES: University[] = [
   {
     name: "UVA",
+    fullName: "University of Virginia",
     slug: "uva",
     abbreviation: "UVA",
     primaryColor: "#232D4B",
@@ -20,6 +27,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "Virginia Tech",
+    fullName: "Virginia Tech",
     slug: "virginia-tech",
     abbreviation: "VT",
     primaryColor: "#861F41",
@@ -28,6 +36,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "JMU",
+    fullName: "James Madison",
     slug: "jmu",
     abbreviation: "JMU",
     primaryColor: "#450084",
@@ -36,6 +45,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "George Mason",
+    fullName: "George Mason",
     slug: "george-mason",
     abbreviation: "GMU",
     primaryColor: "#006633",
@@ -44,6 +54,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "VCU",
+    fullName: "Virginia Commonwealth",
     slug: "vcu",
     abbreviation: "VCU",
     primaryColor: "#000000",
@@ -52,6 +63,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "ODU",
+    fullName: "Old Dominion",
     slug: "odu",
     abbreviation: "ODU",
     primaryColor: "#003366",
@@ -60,6 +72,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "University of Richmond",
+    fullName: "University of Richmond",
     slug: "university-of-richmond",
     abbreviation: "UR",
     primaryColor: "#000066",
@@ -68,6 +81,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "William & Mary",
+    fullName: "William & Mary",
     slug: "william-mary",
     abbreviation: "W&M",
     primaryColor: "#115740",
@@ -76,6 +90,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "Radford",
+    fullName: "Radford",
     slug: "radford",
     abbreviation: "RU",
     primaryColor: "#C2011B",
@@ -84,6 +99,7 @@ export const UNIVERSITIES: University[] = [
   },
   {
     name: "Longwood",
+    fullName: "Longwood",
     slug: "longwood",
     abbreviation: "LU",
     primaryColor: "#003366",

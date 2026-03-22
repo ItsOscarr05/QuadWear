@@ -6,18 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import { getMajorBySlug } from "@/lib/majors";
 import { getUniversityByName, getUniversityBySlug } from "@/lib/universities";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  designImage: string;
-  mockupImage: string;
-  badges: string;
-  university: string;
-  major: string;
-}
+import type { ProductCatalog } from "@/lib/types/product";
 
 export default function MajorShopClient() {
   const params = useParams();
@@ -26,7 +15,7 @@ export default function MajorShopClient() {
   const majorConfig = getMajorBySlug(slug);
   const universityFilterSlug = searchParams.get("university");
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductCatalog[]>([]);
   const [loading, setLoading] = useState(true);
 
   const majorName = majorConfig?.name ?? "";
@@ -41,8 +30,8 @@ export default function MajorShopClient() {
         const res = await fetch(
           `/api/products?major=${encodeURIComponent(majorName)}`
         );
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+        const data = (await res.json()) as unknown;
+        setProducts(Array.isArray(data) ? (data as ProductCatalog[]) : []);
       } catch {
         setProducts([]);
       } finally {
@@ -99,7 +88,7 @@ export default function MajorShopClient() {
       {universitiesOnPage.length > 0 && (
         <div className="mb-8">
           <h2 className="text-lg font-bold text-black mb-3">
-            Filter by university
+            Filter by school
           </h2>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -126,7 +115,7 @@ export default function MajorShopClient() {
                       : "border-black/20 bg-white hover:border-primary"
                   }`}
                 >
-                  {uniName}
+                  {u?.fullName ?? uniName}
                 </Link>
               );
             })}

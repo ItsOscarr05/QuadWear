@@ -37,14 +37,14 @@ export default function ShopHubPage() {
             </svg>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-black mb-3">
-            Shop by University
+            Shop by School
           </h2>
           <p className="text-gray-700 leading-relaxed">
             Pick your campus and see every design we carry for that school,
             across all majors.
           </p>
           <span className="inline-block mt-6 font-bold text-primary group-hover:underline">
-            Browse universities →
+            Browse schools →
           </span>
         </Link>
 
@@ -71,8 +71,8 @@ export default function ShopHubPage() {
             Shop by Major
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            Choose your field of study and explore designs from every university
-            we offer.
+            Choose your field of study and explore designs from every school we
+            offer.
           </p>
           <span className="inline-block mt-6 font-bold text-primary group-hover:underline">
             Browse majors →

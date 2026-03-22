@@ -1,21 +1,10 @@
 'use client'
 
 import ProductCard from './ProductCard'
-
-interface Product {
-  id: string
-  name: string
-  slug: string
-  price: number
-  designImage: string
-  mockupImage: string
-  badges: string
-  university: string
-  major: string
-}
+import type { ProductCatalog } from '@/lib/types/product'
 
 interface ProductGridProps {
-  products: Product[]
+  products: ProductCatalog[]
 }
 
 export default function ProductGrid({ products }: ProductGridProps) {

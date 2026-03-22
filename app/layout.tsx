@@ -18,7 +18,8 @@ const kalam = Kalam({
 
 export const metadata: Metadata = {
   title: "QuadWear - Hand-drawn tees for your major",
-  description: "Choose your university → pick your major → wear it. Hand-drawn t-shirts designed for students.",
+  description:
+    "Choose your school → pick your major → wear it. Hand-drawn t-shirts designed for students.",
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },

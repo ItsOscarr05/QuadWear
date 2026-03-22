@@ -102,6 +102,20 @@ The landing page loads featured products with `?university=JMU` (see [`app/page.
 - `STRIPE_WEBHOOK_SECRET`: Stripe webhook secret (for production)
 - `DATABASE_URL`: Prisma database URL
 
+### Zoho Mail (contact form SMTP)
+
+Used when the app sends mail via Zoho (e.g. Nodemailer in an API route). Set in `.env` locally and in Vercel/hosting env.
+
+| Variable | Purpose |
+|----------|---------|
+| `SMTP_HOST` | Usually `smtp.zoho.com` (EU: `smtp.zoho.eu`) |
+| `SMTP_PORT` | `587` with `SMTP_SECURE=false`, or `465` with `SMTP_SECURE=true` |
+| `SMTP_SECURE` | `false` for port 587 (STARTTLS), `true` for port 465 (SSL) |
+| `SMTP_USER` | Full Zoho mailbox address (e.g. `support@quadwearshop.com`) |
+| `SMTP_PASSWORD` | Mailbox password or **App Password** if 2FA is enabled |
+| `CONTACT_TO_EMAIL` | Inbox that receives contact form submissions |
+| `CONTACT_FROM_EMAIL` | Sender shown on automated messages (must be allowed for that mailbox in Zoho) |
+
 ## Deployment
 
 This project is ready to deploy on Vercel:

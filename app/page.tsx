@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MAJORS } from "@/lib/majors";
 import type { ProductCatalog } from "@/lib/types/product";
-import { PRODUCT_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
+import { PRODUCT_CARD_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
 import { EmptyStateFeatured } from "@/components/empty-state";
 
 export default function HomePage() {
@@ -22,7 +22,8 @@ export default function HomePage() {
       const response = await fetch("/api/products?university=JMU");
       const data = (await response.json()) as unknown;
       const products = Array.isArray(data) ? (data as ProductCatalog[]) : [];
-      setFeaturedProducts(products.slice(0, 4));
+      const sorted = [...products].sort((a, b) => a.name.localeCompare(b.name));
+      setFeaturedProducts(sorted.slice(0, 4));
     } catch (error) {
       console.error("Error fetching featured products:", error);
     }
@@ -119,7 +120,7 @@ export default function HomePage() {
       <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
-            Trending at JMU
+            Trending Designs
           </h2>
           {featuredProducts.length > 0 ? (
             <>
@@ -132,20 +133,20 @@ export default function HomePage() {
                       href={`/shop/${product.slug}`}
                       className="card-sticker group"
                     >
-                      <div className="relative aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50">
+                      {badges.length > 0 && (
+                        <div className="mb-2">
+                          <span className="inline-block bg-accent text-black text-xs font-bold px-3 py-1 rounded-full border-2 border-black">
+                            {badges[0]}
+                          </span>
+                        </div>
+                      )}
+                      <div className="relative aspect-square mb-4 overflow-hidden rounded-lg bg-white">
                         <Image
                           src={product.mockupImage || product.designImage}
                           alt={product.name}
                           fill
-                          className={`${PRODUCT_IMAGE_DISPLAY_CLASS} transition-transform duration-300 group-hover:brightness-[1.06]`}
+                          className={`${PRODUCT_CARD_IMAGE_DISPLAY_CLASS} transition-transform duration-300 group-hover:brightness-[1.06]`}
                         />
-                        {badges.length > 0 && (
-                          <div className="absolute top-2 left-2">
-                            <span className="bg-accent text-black text-xs font-bold px-3 py-1 rounded-full border-2 border-black">
-                              {badges[0]}
-                            </span>
-                          </div>
-                        )}
                       </div>
                       <h3 className="font-bold text-lg mb-1 text-black">
                         {product.name}

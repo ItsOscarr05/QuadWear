@@ -42,7 +42,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
         onClick={(e) => e.stopPropagation()}
       >
         <div className="grid md:grid-cols-2 gap-6 p-6">
-          <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
+          <div className="relative aspect-square overflow-hidden rounded-lg bg-white">
             <Image
               src={product.mockupImage || product.designImage}
               alt={product.name}

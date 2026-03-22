@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { EmptyStateCatalog } from "@/components/empty-state";
 import { UNIVERSITIES } from "@/lib/universities";
@@ -42,25 +43,32 @@ export default function ShopByUniversityPage() {
           <Link
             key={u.slug}
             href={`/shop/university/${u.slug}`}
-            className="card-sticker block overflow-hidden transition-all duration-200 hover:border-accent group"
+            className="card-sticker flex h-full flex-col overflow-hidden transition-all duration-200 hover:border-accent group"
           >
+            <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-gray-100">
+              <Image
+                src={encodeURI(u.coverImage)}
+                alt={`${u.fullName} campus`}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              />
+            </div>
             <div
-              className="h-3 w-full border-b-4 border-black"
+              className="h-2 w-full shrink-0 border-b-2 border-black"
               style={{ backgroundColor: u.primaryColor }}
             />
-            <div className="p-6">
+            <div className="flex flex-1 flex-col p-5">
               <p
-                className="text-3xl font-bold mb-1"
+                className="text-3xl font-bold leading-tight"
                 style={{ color: u.primaryColor }}
               >
                 {u.abbreviation}
               </p>
-              <p className="font-bold text-lg text-black group-hover:text-primary transition-colors">
+              <p className="mt-1 font-bold text-lg leading-snug text-black transition-colors group-hover:text-primary">
                 {u.fullName}
               </p>
-              <p className="text-sm text-gray-600 mt-2">
-                View collection →
-              </p>
+              <p className="mt-2 text-sm text-gray-600">View collection →</p>
             </div>
           </Link>
         ))}

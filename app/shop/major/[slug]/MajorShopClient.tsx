@@ -163,6 +163,7 @@ export default function MajorShopClient() {
           <ProductGrid
             products={filteredProducts}
             schoolPrimaryColor={universityForAccent?.primaryColor}
+            cardVariant="square"
           />
         </>
       )}

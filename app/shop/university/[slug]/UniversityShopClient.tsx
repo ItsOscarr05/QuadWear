@@ -162,6 +162,7 @@ export default function UniversityShopClient() {
           <ProductGrid
             products={filteredProducts}
             schoolPrimaryColor={universityConfig.primaryColor}
+            cardVariant="square"
           />
         </>
       )}

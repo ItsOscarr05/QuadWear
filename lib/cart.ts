@@ -58,11 +58,7 @@ export function updateCartItem(productId: string, size: string, quantity: number
   const index = cart.items.findIndex((i) => i.productId === productId && i.size === size)
 
   if (index >= 0) {
-    if (quantity <= 0) {
-      cart.items.splice(index, 1)
-    } else {
-      cart.items[index].quantity = quantity
-    }
+    cart.items[index].quantity = Math.max(0, quantity)
   }
 
   saveCart(cart)
@@ -70,7 +66,13 @@ export function updateCartItem(productId: string, size: string, quantity: number
 }
 
 export function removeFromCart(productId: string, size: string): Cart {
-  return updateCartItem(productId, size, 0)
+  const cart = getCart()
+  const index = cart.items.findIndex((i) => i.productId === productId && i.size === size)
+  if (index >= 0) {
+    cart.items.splice(index, 1)
+  }
+  saveCart(cart)
+  return cart
 }
 
 export function clearCart(): void {
@@ -86,6 +88,7 @@ export function getCartTotalPrice(cart: Cart): number {
   return cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 }
 
+/** True when there is at least one line item with quantity > 0 (can proceed to checkout). */
 export function isCartValid(cart: Cart): boolean {
-  return cart.items.length > 0
+  return cart.items.some((i) => i.quantity > 0)
 }

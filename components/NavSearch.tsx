@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UNIVERSITIES } from "@/lib/universities";
 import { MAJORS } from "@/lib/majors";
+import { EmptySearchHint } from "@/components/empty-state";
 
 export default function NavSearch() {
   const router = useRouter();
@@ -121,7 +122,9 @@ export default function NavSearch() {
           role="listbox"
         >
           {!hasResults ? (
-            <p className="px-3 py-3 text-sm text-gray-600">No matches.</p>
+            <div className="px-1 py-1">
+              <EmptySearchHint className="!py-3" />
+            </div>
           ) : (
             <>
               {universities.length > 0 && (

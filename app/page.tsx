@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MAJORS } from "@/lib/majors";
 import type { ProductCatalog } from "@/lib/types/product";
+import { EmptyStateFeatured } from "@/components/empty-state";
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<ProductCatalog[]>([]);
@@ -114,60 +115,76 @@ export default function HomePage() {
       </section>
 
       {/* Featured Collection */}
-      {featuredProducts.length > 0 && (
-        <section className="bg-white py-20 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
-              Trending at JMU
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-              {featuredProducts.map((product) => {
-                const badges = JSON.parse(product.badges || "[]");
-                return (
-                  <Link
-                    key={product.id}
-                    href={`/shop/${product.slug}`}
-                    className="card-sticker group"
-                  >
-                    <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
-                      <Image
-                        src={product.mockupImage || product.designImage}
-                        alt={product.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {badges.length > 0 && (
-                        <div className="absolute top-2 left-2">
-                          <span className="bg-accent text-black text-xs font-bold px-3 py-1 rounded-full border-2 border-black">
-                            {badges[0]}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <h3 className="font-bold text-lg mb-1 text-black">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {product.major}
-                    </p>
-                    <p className="text-2xl font-bold text-primary">
-                      ${(product.price / 100).toFixed(2)}
-                    </p>
-                  </Link>
-                );
-              })}
+      <section className="bg-white py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
+            Trending at JMU
+          </h2>
+          {featuredProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                {featuredProducts.map((product) => {
+                  const badges = JSON.parse(product.badges || "[]");
+                  return (
+                    <Link
+                      key={product.id}
+                      href={`/shop/${product.slug}`}
+                      className="card-sticker group"
+                    >
+                      <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
+                        <Image
+                          src={product.mockupImage || product.designImage}
+                          alt={product.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {badges.length > 0 && (
+                          <div className="absolute top-2 left-2">
+                            <span className="bg-accent text-black text-xs font-bold px-3 py-1 rounded-full border-2 border-black">
+                              {badges[0]}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="font-bold text-lg mb-1 text-black">
+                        {product.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-2">
+                        {product.major}
+                      </p>
+                      <p className="text-2xl font-bold text-primary">
+                        ${(product.price / 100).toFixed(2)}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
+              <div className="text-center mt-12">
+                <Link
+                  href="/shop/university/jmu"
+                  className="btn-secondary inline-block"
+                >
+                  View All JMU Designs
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="max-w-lg mx-auto mt-12">
+              <EmptyStateFeatured>
+                <Link
+                  href="/shop/university"
+                  className="btn-primary inline-block"
+                >
+                  Shop by university
+                </Link>
+                <Link href="/shop" className="btn-secondary inline-block">
+                  Browse shop
+                </Link>
+              </EmptyStateFeatured>
             </div>
-            <div className="text-center mt-12">
-              <Link
-                href="/shop/university/jmu"
-                className="btn-secondary inline-block"
-              >
-                View All JMU Designs
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       {/* Benefits/Features Section */}
       <section className="bg-white py-20 px-4">

@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -25,16 +25,19 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white">Shop</h4>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
-                <Link href="/shop" className="hover:text-accent transition-colors">
-                  All Products
+                <Link
+                  href="/shop/university"
+                  className="hover:text-accent transition-colors"
+                >
+                  By University
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/shop/university/jmu"
+                  href="/shop/major"
                   className="hover:text-accent transition-colors"
                 >
-                  JMU Collection
+                  By Major
                 </Link>
               </li>
             </ul>
@@ -44,12 +47,18 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white">Support</h4>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
-                <Link href="/shipping" className="hover:text-accent transition-colors">
+                <Link
+                  href="/shipping"
+                  className="hover:text-accent transition-colors"
+                >
                   Shipping & Returns
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-accent transition-colors">
+                <Link
+                  href="/contact"
+                  className="hover:text-accent transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -80,9 +89,11 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t-4 border-white/20 text-center text-sm text-white/60">
-          <p>&copy; {new Date().getFullYear()} QuadWear. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} QuadWear. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

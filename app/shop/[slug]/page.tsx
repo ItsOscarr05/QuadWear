@@ -8,6 +8,7 @@ import { addToCart } from '@/lib/cart'
 import { getUniversityByName } from '@/lib/universities'
 import { majorSlugFromName } from '@/lib/majors'
 import type { ProductFromApi } from '@/lib/types/product'
+import { EmptyStateProductMissing } from '@/components/empty-state'
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -84,11 +85,14 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-gray-500 text-lg">Product not found</p>
-        <Link href="/shop" className="text-primary hover:underline mt-4 inline-block">
-          Back to Shop
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-lg mx-auto">
+          <EmptyStateProductMissing>
+            <Link href="/shop" className="btn-primary inline-block">
+              Back to shop
+            </Link>
+          </EmptyStateProductMissing>
+        </div>
       </div>
     )
   }

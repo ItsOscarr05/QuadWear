@@ -1,17 +1,27 @@
 'use client'
 
 import ProductCard from './ProductCard'
+import { EmptyStateCatalog } from '@/components/empty-state'
 import type { ProductCatalog } from '@/lib/types/product'
 
 interface ProductGridProps {
   products: ProductCatalog[]
+  /** When set (e.g. on a university shop page), tinted grad-cap matches school branding. */
+  schoolPrimaryColor?: string
 }
 
-export default function ProductGrid({ products }: ProductGridProps) {
+export default function ProductGrid({
+  products,
+  schoolPrimaryColor,
+}: ProductGridProps) {
   if (products.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No products found. Try adjusting your filters.</p>
+      <div className="max-w-lg mx-auto py-8">
+        <EmptyStateCatalog
+          schoolPrimaryColor={schoolPrimaryColor}
+          title="Filters cranked, racks empty"
+          description="Nothing matches that combo—loosen a filter or browse another school or major."
+        />
       </div>
     )
   }

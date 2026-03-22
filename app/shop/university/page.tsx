@@ -1,7 +1,25 @@
 import Link from "next/link";
+import { EmptyStateCatalog } from "@/components/empty-state";
 import { UNIVERSITIES } from "@/lib/universities";
 
 export default function ShopByUniversityPage() {
+  if (UNIVERSITIES.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-lg mx-auto">
+          <EmptyStateCatalog
+            title="No schools on the roster yet"
+            description="We’re adding campuses—check back soon or head to the main shop."
+          >
+            <Link href="/shop" className="btn-primary inline-block text-center">
+              Back to shop
+            </Link>
+          </EmptyStateCatalog>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-10">

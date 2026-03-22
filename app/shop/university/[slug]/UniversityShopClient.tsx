@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
+import {
+  EmptyStateCatalog,
+  EmptyStateSchoolMissing,
+} from "@/components/empty-state";
 import { getUniversityBySlug } from "@/lib/universities";
 import { majorSlugFromName } from "@/lib/majors";
 import type { ProductCatalog } from "@/lib/types/product";
@@ -55,11 +59,14 @@ export default function UniversityShopClient() {
 
   if (!universityConfig) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <p className="text-lg text-gray-600 mb-6">School not found.</p>
-        <Link href="/shop/university" className="btn-primary inline-block">
-          Back to schools
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="max-w-lg mx-auto">
+          <EmptyStateSchoolMissing>
+            <Link href="/shop/university" className="btn-primary inline-block">
+              Back to schools
+            </Link>
+          </EmptyStateSchoolMissing>
+        </div>
       </div>
     );
   }
@@ -131,12 +138,20 @@ export default function UniversityShopClient() {
           <p className="text-gray-500">Loading products...</p>
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
-            {majorFilterSlug
-              ? "No products for this major at this school yet."
-              : `No products found for ${universityConfig.fullName} yet.`}
-          </p>
+        <div className="max-w-lg mx-auto py-8">
+          <EmptyStateCatalog
+            schoolPrimaryColor={universityConfig.primaryColor}
+            title={
+              majorFilterSlug
+                ? "This major’s rack is still in the studio"
+                : `${universityConfig.fullName} — coming soon...`
+            }
+            description={
+              majorFilterSlug
+                ? "No tees for that combo yet. Try another major filter or clear it to see everything for this school."
+                : `We’re stocking designs for ${universityConfig.fullName}. Check another campus or pop back soon.`
+            }
+          />
         </div>
       ) : (
         <>
@@ -144,7 +159,10 @@ export default function UniversityShopClient() {
             {filteredProducts.length} product
             {filteredProducts.length !== 1 ? "s" : ""}
           </p>
-          <ProductGrid products={filteredProducts} />
+          <ProductGrid
+            products={filteredProducts}
+            schoolPrimaryColor={universityConfig.primaryColor}
+          />
         </>
       )}
     </div>

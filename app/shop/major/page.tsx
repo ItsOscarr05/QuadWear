@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EmptyStateCatalog } from "@/components/empty-state";
 import { MAJORS } from "@/lib/majors";
 
 function MajorIcon() {
@@ -20,6 +21,23 @@ function MajorIcon() {
 }
 
 export default function ShopByMajorPage() {
+  if (MAJORS.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-lg mx-auto">
+          <EmptyStateCatalog
+            title="Majors are enrolling soon"
+            description="Our major list is empty for now—swing by the shop hub for updates."
+          >
+            <Link href="/shop" className="btn-primary inline-block text-center">
+              Back to shop
+            </Link>
+          </EmptyStateCatalog>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-10">

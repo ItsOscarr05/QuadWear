@@ -12,6 +12,7 @@ import {
   getCartTotalPrice,
   isCartValid,
 } from '@/lib/cart'
+import { EmptyStateCart } from '@/components/empty-state'
 
 export default function CartPage() {
   const router = useRouter()
@@ -62,12 +63,11 @@ export default function CartPage() {
       <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
       {cart.items.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg mb-4">Your cart is empty</p>
+        <EmptyStateCart>
           <Link href="/shop" className="btn-primary inline-block">
-            Continue Shopping
+            Continue shopping
           </Link>
-        </div>
+        </EmptyStateCart>
       ) : (
         <>
           {/* Cart Items */}
@@ -162,8 +162,10 @@ export default function CartPage() {
                   Continue Shopping
                 </Link>
                 <button
-                  onClick={() => router.push('/checkout')}
-                  className="flex-1 btn-primary"
+                  type="button"
+                  onClick={() => isValid && router.push('/checkout')}
+                  disabled={!isValid}
+                  className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Checkout
                 </button>

@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
+import {
+  EmptyStateCatalog,
+  EmptyStateMajorMissing,
+} from "@/components/empty-state";
 import { getMajorBySlug } from "@/lib/majors";
 import { getUniversityByName, getUniversityBySlug } from "@/lib/universities";
 import type { ProductCatalog } from "@/lib/types/product";
@@ -53,13 +57,20 @@ export default function MajorShopClient() {
     return products.filter((p) => p.university === uni.name);
   }, [products, universityFilterSlug]);
 
+  const universityForAccent = universityFilterSlug
+    ? getUniversityBySlug(universityFilterSlug)
+    : null;
+
   if (!majorConfig) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <p className="text-lg text-gray-600 mb-6">Major not found.</p>
-        <Link href="/shop/major" className="btn-primary inline-block">
-          Back to majors
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="max-w-lg mx-auto">
+          <EmptyStateMajorMissing>
+            <Link href="/shop/major" className="btn-primary inline-block">
+              Back to majors
+            </Link>
+          </EmptyStateMajorMissing>
+        </div>
       </div>
     );
   }
@@ -128,12 +139,20 @@ export default function MajorShopClient() {
           <p className="text-gray-500">Loading products...</p>
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
-            {universityFilterSlug
-              ? "No products for this school in this major yet."
-              : `No products found for ${majorConfig.name} yet.`}
-          </p>
+        <div className="max-w-lg mx-auto py-8">
+          <EmptyStateCatalog
+            schoolPrimaryColor={universityForAccent?.primaryColor}
+            title={
+              universityFilterSlug
+                ? "That campus + major mix is still cooking"
+                : `${majorConfig.name}—ink’s drying`
+            }
+            description={
+              universityFilterSlug
+                ? "No shirts for that school in this major yet. Try another filter or browse all schools for this major."
+                : `We’re adding ${majorConfig.name} designs across schools. Try another major or visit again soon.`
+            }
+          />
         </div>
       ) : (
         <>
@@ -141,7 +160,10 @@ export default function MajorShopClient() {
             {filteredProducts.length} product
             {filteredProducts.length !== 1 ? "s" : ""}
           </p>
-          <ProductGrid products={filteredProducts} />
+          <ProductGrid
+            products={filteredProducts}
+            schoolPrimaryColor={universityForAccent?.primaryColor}
+          />
         </>
       )}
     </div>

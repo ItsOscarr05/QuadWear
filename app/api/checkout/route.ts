@@ -5,10 +5,18 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { items, email, shipping } = body
+    const { items: rawItems, email, shipping } = body
+
+    const items = Array.isArray(rawItems)
+      ? rawItems.filter((item: { quantity?: number }) => (item.quantity ?? 0) > 0)
+      : []
+
+    if (items.length === 0) {
+      return NextResponse.json({ error: 'No items to purchase' }, { status: 400 })
+    }
 
     // Calculate total
-    const totalCents = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0)
+    const totalCents = items.reduce((sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity, 0)
 
     // Create order number
     const orderNumber = `QW-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`

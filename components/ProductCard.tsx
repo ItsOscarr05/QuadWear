@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { addToCart } from '@/lib/cart'
 import { addToWishlist, removeFromWishlist, isInWishlist } from '@/lib/wishlist'
 import QuickViewModal from './QuickViewModal'
+import { PRODUCT_IMAGE_DISPLAY_CLASS } from '@/lib/productImageDisplay'
 import type { ProductCatalog } from '@/lib/types/product'
 
 interface ProductCardProps {
@@ -54,12 +55,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     <>
       <div className="card-sticker group">
         <Link href={`/shop/${product.slug}`} className="block">
-          <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
+          <div className="relative aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50">
             <Image
               src={product.mockupImage || product.designImage}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className={`${PRODUCT_IMAGE_DISPLAY_CLASS} transition-transform duration-300 group-hover:brightness-[1.06]`}
             />
             <button
               onClick={(e) => {

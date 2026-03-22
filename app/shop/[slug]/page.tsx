@@ -1,66 +1,129 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
-import { addToCart } from '@/lib/cart'
-import { getUniversityByName } from '@/lib/universities'
-import { majorSlugFromName } from '@/lib/majors'
-import type { ProductFromApi } from '@/lib/types/product'
-import { EmptyStateProductMissing } from '@/components/empty-state'
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { addToCart } from "@/lib/cart";
+import { getUniversityByName } from "@/lib/universities";
+import { majorSlugFromName } from "@/lib/majors";
+import type { ProductFromApi } from "@/lib/types/product";
+import { PRODUCT_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
+import { EmptyStateProductMissing } from "@/components/empty-state";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const GALLERY_FADE_MS = 150;
 
 export default function ProductDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [product, setProduct] = useState<ProductFromApi | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [selectedSize, setSelectedSize] = useState('M')
-  const [quantity, setQuantity] = useState(1)
-  const [showSizeHelp, setShowSizeHelp] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  const [product, setProduct] = useState<ProductFromApi | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedSize, setSelectedSize] = useState("M");
+  const [quantity, setQuantity] = useState(1);
+  const [showSizeHelp, setShowSizeHelp] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [galleryImageVisible, setGalleryImageVisible] = useState(true);
+  const galleryTransitionLock = useRef(false);
+  const galleryTimersRef = useRef<number[]>([]);
 
-  const slug = params.slug as string
+  const slug = params.slug as string;
+
+  const clearGalleryTimers = () => {
+    galleryTimersRef.current.forEach(clearTimeout);
+    galleryTimersRef.current = [];
+  };
+
+  useEffect(() => () => clearGalleryTimers(), []);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     const fetchProduct = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await fetch(
           `/api/products/${encodeURIComponent(slug)}`,
-        )
+        );
         if (response.status === 404) {
-          if (!cancelled) setProduct(null)
-          return
+          if (!cancelled) setProduct(null);
+          return;
         }
         if (!response.ok) {
-          if (!cancelled) setProduct(null)
-          return
+          if (!cancelled) setProduct(null);
+          return;
         }
-        const found = (await response.json()) as ProductFromApi
-        if (cancelled) return
-        setProduct(found)
-        const sizes = JSON.parse(found.sizes || '{}')
+        const found = (await response.json()) as ProductFromApi;
+        if (cancelled) return;
+        setProduct(found);
+        const sizes = JSON.parse(found.sizes || "{}");
         const firstAvailableSize =
-          Object.keys(sizes).find((s) => sizes[s] > 0) || 'M'
-        setSelectedSize(firstAvailableSize)
+          Object.keys(sizes).find((s) => sizes[s] > 0) || "M";
+        setSelectedSize(firstAvailableSize);
       } catch (error) {
-        console.error('Error fetching product:', error)
-        if (!cancelled) setProduct(null)
+        console.error("Error fetching product:", error);
+        if (!cancelled) setProduct(null);
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
-    }
+    };
 
-    fetchProduct()
+    fetchProduct();
     return () => {
-      cancelled = true
+      cancelled = true;
+    };
+  }, [slug]);
+
+  const galleryImages = useMemo(() => {
+    if (!product) return [];
+    const urls = [product.mockupImage, product.designImage].filter(Boolean);
+    return [...new Set(urls)];
+  }, [product]);
+
+  useEffect(() => {
+    clearGalleryTimers();
+    galleryTransitionLock.current = false;
+    setImageIndex(0);
+    setGalleryImageVisible(true);
+  }, [product?.id]);
+
+  const goToGalleryImage = (nextIndex: number) => {
+    if (
+      !product ||
+      galleryImages.length <= 1 ||
+      nextIndex === imageIndex ||
+      galleryTransitionLock.current
+    ) {
+      return;
     }
-  }, [slug])
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setImageIndex(nextIndex);
+      return;
+    }
+    galleryTransitionLock.current = true;
+    clearGalleryTimers();
+    setGalleryImageVisible(false);
+
+    const t1 = window.setTimeout(() => {
+      setImageIndex(nextIndex);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setGalleryImageVisible(true);
+          const t2 = window.setTimeout(() => {
+            galleryTransitionLock.current = false;
+          }, GALLERY_FADE_MS);
+          galleryTimersRef.current.push(t2);
+        });
+      });
+    }, GALLERY_FADE_MS);
+    galleryTimersRef.current.push(t1);
+  };
 
   const handleAddToCart = () => {
-    if (!product) return
+    if (!product) return;
 
     addToCart({
       productId: product.id,
@@ -70,17 +133,17 @@ export default function ProductDetailPage() {
       size: selectedSize,
       image: product.mockupImage || product.designImage,
       quantity,
-    })
-    window.dispatchEvent(new Event('cartUpdated'))
-    router.push('/cart')
-  }
+    });
+    window.dispatchEvent(new Event("cartUpdated"));
+    router.push("/cart");
+  };
 
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
         <p className="text-gray-500">Loading product...</p>
       </div>
-    )
+    );
   }
 
   if (!product) {
@@ -94,31 +157,91 @@ export default function ProductDetailPage() {
           </EmptyStateProductMissing>
         </div>
       </div>
-    )
+    );
   }
 
-  const badges = JSON.parse(product.badges || '[]')
-  const colors = JSON.parse(product.colors || '[]')
-  const sizes = JSON.parse(product.sizes || '{}')
-  const availableSizes = Object.keys(sizes).filter((size) => sizes[size] > 0)
+  const badges = JSON.parse(product.badges || "[]");
+  const colors = JSON.parse(product.colors || "[]");
+  const sizes = JSON.parse(product.sizes || "{}");
+  const availableSizes = Object.keys(sizes).filter((size) => sizes[size] > 0);
 
-  const uniMeta = getUniversityByName(product.university)
+  const uniMeta = getUniversityByName(product.university);
   const uniSlug =
-    uniMeta?.slug ??
-    product.university.toLowerCase().replace(/\s+/g, '-')
-  const sameSchoolMajorHref = `/shop/university/${uniSlug}?major=${encodeURIComponent(majorSlugFromName(product.major))}`
+    uniMeta?.slug ?? product.university.toLowerCase().replace(/\s+/g, "-");
+  const sameSchoolMajorHref = `/shop/university/${uniSlug}?major=${encodeURIComponent(majorSlugFromName(product.major))}`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        {/* Product Image */}
-        <div className="relative aspect-square">
-          <Image
-            src={product.mockupImage || product.designImage}
-            alt={product.name}
-            fill
-            className="object-cover rounded-xl"
-          />
+      <div className="grid md:grid-cols-[1.12fr_1fr] gap-8 mb-12">
+        {/* Product image gallery (mockup + design when both exist) */}
+        <div className="relative aspect-square overflow-hidden rounded-xl bg-white">
+          {galleryImages.length > 0 && (
+            <div
+              className={`absolute inset-0 transition-opacity duration-300 ease-in-out motion-reduce:transition-none motion-reduce:duration-0 ${
+                galleryImageVisible ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={galleryImages[imageIndex]}
+                alt={
+                  galleryImages.length > 1
+                    ? `${product.name} — image ${imageIndex + 1} of ${galleryImages.length}`
+                    : product.name
+                }
+                fill
+                className={PRODUCT_IMAGE_DISPLAY_CLASS}
+                sizes="(min-width: 768px) 56vw, 100vw"
+                priority
+              />
+            </div>
+          )}
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() =>
+                  goToGalleryImage(
+                    (imageIndex - 1 + galleryImages.length) %
+                      galleryImages.length,
+                  )
+                }
+                className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border-4 border-black bg-white/95 text-black shadow-[0_3px_0_#000] transition hover:bg-primary hover:text-white"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="h-6 w-6" strokeWidth={2.5} />
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  goToGalleryImage((imageIndex + 1) % galleryImages.length)
+                }
+                className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border-4 border-black bg-white/95 text-black shadow-[0_3px_0_#000] transition hover:bg-primary hover:text-white"
+                aria-label="Next image"
+              >
+                <ChevronRight className="h-6 w-6" strokeWidth={2.5} />
+              </button>
+              <div
+                className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2"
+                role="group"
+                aria-label="Product images"
+              >
+                {galleryImages.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-pressed={i === imageIndex}
+                    aria-label={`View image ${i + 1}`}
+                    onClick={() => goToGalleryImage(i)}
+                    className={`h-2.5 w-2.5 rounded-full border-2 border-black transition ${
+                      i === imageIndex
+                        ? "bg-primary"
+                        : "bg-white/90 hover:bg-white"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Product Details */}
@@ -141,7 +264,10 @@ export default function ProductDetailPage() {
 
           <p className="text-3xl font-bold text-primary mb-6">
             ${(product.price / 100).toFixed(2)}
-            <span className="text-lg text-gray-500 font-normal"> per shirt</span>
+            <span className="text-lg text-gray-500 font-normal">
+              {" "}
+              per shirt
+            </span>
           </p>
 
           {product.description && (
@@ -166,8 +292,8 @@ export default function ProductDetailPage() {
                   onClick={() => setSelectedSize(size)}
                   className={`px-6 py-3 border-2 rounded-lg font-semibold transition-colors ${
                     selectedSize === size
-                      ? 'border-primary bg-primary text-white'
-                      : 'border-gray-300 hover:border-primary'
+                      ? "border-primary bg-primary text-white"
+                      : "border-gray-300 hover:border-primary"
                   }`}
                 >
                   {size}
@@ -187,7 +313,9 @@ export default function ProductDetailPage() {
               >
                 −
               </button>
-              <span className="text-2xl font-semibold w-16 text-center">{quantity}</span>
+              <span className="text-2xl font-semibold w-16 text-center">
+                {quantity}
+              </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
                 className="w-12 h-12 border-2 border-gray-300 rounded-lg hover:border-primary text-xl"
@@ -206,7 +334,10 @@ export default function ProductDetailPage() {
           )}
 
           {/* Add to Cart Button */}
-          <button onClick={handleAddToCart} className="w-full btn-primary text-lg py-4 mb-4">
+          <button
+            onClick={handleAddToCart}
+            className="w-full btn-primary text-lg py-4 mb-4"
+          >
             Add to Cart
           </button>
 
@@ -219,17 +350,22 @@ export default function ProductDetailPage() {
 
       {/* Designed for section */}
       <div className="border-t-2 border-gray-200 pt-8 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Designed for {product.major} students</h2>
+        <h2 className="text-2xl font-bold mb-4">
+          Designed for {product.major} students
+        </h2>
         <p className="text-gray-700">
-          This design celebrates the {product.major} major at {product.university}. Perfect for
-          study groups, clubs, and classes.
+          This design celebrates the {product.major} major at{" "}
+          {product.university}. Perfect for study groups, clubs, and classes.
         </p>
       </div>
 
       {/* You might also like */}
       <div className="border-t-2 border-gray-200 pt-8">
         <h2 className="text-2xl font-bold mb-6">You might also like</h2>
-        <Link href={sameSchoolMajorHref} className="text-primary hover:underline">
+        <Link
+          href={sameSchoolMajorHref}
+          className="text-primary hover:underline"
+        >
           View all {product.major} designs at {product.university} →
         </Link>
       </div>
@@ -293,5 +429,5 @@ export default function ProductDetailPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -2,25 +2,32 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-/** Placeholder art until real mockups exist; replace URLs when you add assets under `public/`. */
-const PLACEHOLDER_IMAGE = "/quadwear-logo.png";
+/** Paths under `public/products/` — use root-relative URLs in the DB */
+const IMG = {
+  businessFront: "/products/QW_Business_front.jpeg",
+  businessBack: "/products/QW_Business_back.png",
+};
 
 async function main() {
-  await prisma.product.upsert({
+  await prisma.product.deleteMany({
     where: { slug: "jmu-computer-science-sample" },
+  });
+
+  await prisma.product.upsert({
+    where: { slug: "jmu-business-qw" },
     create: {
-      name: "JMU Computer Science (sample)",
-      slug: "jmu-computer-science-sample",
+      name: "QuadWear Business",
+      slug: "jmu-business-qw",
       description:
-        "Example listing for local development. Edit in Prisma Studio or replace via your own seed.",
+        "Hand-drawn Business design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      designImage: PLACEHOLDER_IMAGE,
-      mockupImage: PLACEHOLDER_IMAGE,
-      badges: JSON.stringify(["New", "Sample"]),
+      mockupImage: IMG.businessFront,
+      designImage: IMG.businessBack,
+      badges: JSON.stringify(["New"]),
       university: "JMU",
-      major: "Computer Science",
+      major: "Business",
       colors: JSON.stringify(["purple", "white"]),
       sizes: JSON.stringify({
         S: 5,
@@ -31,17 +38,17 @@ async function main() {
       }),
     },
     update: {
-      name: "JMU Computer Science (sample)",
+      name: "QuadWear Business",
       description:
-        "Example listing for local development. Edit in Prisma Studio or replace via your own seed.",
+        "Hand-drawn Business design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      designImage: PLACEHOLDER_IMAGE,
-      mockupImage: PLACEHOLDER_IMAGE,
-      badges: JSON.stringify(["New", "Sample"]),
+      mockupImage: IMG.businessFront,
+      designImage: IMG.businessBack,
+      badges: JSON.stringify(["New"]),
       university: "JMU",
-      major: "Computer Science",
+      major: "Business",
       colors: JSON.stringify(["purple", "white"]),
       sizes: JSON.stringify({
         S: 5,
@@ -53,7 +60,7 @@ async function main() {
     },
   });
 
-  console.log("Seeded sample product: jmu-computer-science-sample");
+  console.log("Seeded product: jmu-business-qw (images from /public/products/)");
 }
 
 main()

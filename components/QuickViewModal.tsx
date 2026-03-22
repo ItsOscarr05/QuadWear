@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { addToCart } from '@/lib/cart'
+import { PRODUCT_IMAGE_DISPLAY_CLASS } from '@/lib/productImageDisplay'
 import type { ProductQuickView } from '@/lib/types/product'
 
 interface QuickViewModalProps {
@@ -41,12 +42,12 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
         onClick={(e) => e.stopPropagation()}
       >
         <div className="grid md:grid-cols-2 gap-6 p-6">
-          <div className="relative aspect-square">
+          <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
             <Image
               src={product.mockupImage || product.designImage}
               alt={product.name}
               fill
-              className="object-cover rounded-lg"
+              className={PRODUCT_IMAGE_DISPLAY_CLASS}
             />
           </div>
           <div>

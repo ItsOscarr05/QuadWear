@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MAJORS } from "@/lib/majors";
 import type { ProductCatalog } from "@/lib/types/product";
+import { PRODUCT_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
 import { EmptyStateFeatured } from "@/components/empty-state";
 
 export default function HomePage() {
@@ -131,12 +132,12 @@ export default function HomePage() {
                       href={`/shop/${product.slug}`}
                       className="card-sticker group"
                     >
-                      <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
+                      <div className="relative aspect-square mb-4 overflow-hidden rounded-lg bg-gray-50">
                         <Image
                           src={product.mockupImage || product.designImage}
                           alt={product.name}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className={`${PRODUCT_IMAGE_DISPLAY_CLASS} transition-transform duration-300 group-hover:brightness-[1.06]`}
                         />
                         {badges.length > 0 && (
                           <div className="absolute top-2 left-2">

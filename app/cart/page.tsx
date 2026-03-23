@@ -34,14 +34,19 @@ export default function CartPage() {
     setCart(getCart())
   }
 
-  const handleQuantityChange = (productId: string, size: string, newQuantity: number) => {
-    updateCartItem(productId, size, newQuantity)
+  const handleQuantityChange = (
+    productId: string,
+    size: string,
+    newQuantity: number,
+    color?: string,
+  ) => {
+    updateCartItem(productId, size, newQuantity, color)
     updateCart()
     window.dispatchEvent(new Event('cartUpdated'))
   }
 
-  const handleRemove = (productId: string, size: string) => {
-    removeFromCart(productId, size)
+  const handleRemove = (productId: string, size: string, color?: string) => {
+    removeFromCart(productId, size, color)
     updateCart()
     window.dispatchEvent(new Event('cartUpdated'))
   }
@@ -74,7 +79,7 @@ export default function CartPage() {
           <div className="space-y-4 mb-8">
             {cart.items.map((item) => (
               <div
-                key={`${item.productId}-${item.size}`}
+                key={`${item.productId}-${item.size}-${item.color ?? ''}`}
                 className="card-sticker flex flex-col sm:flex-row gap-4"
               >
                 <Link href={`/shop/${item.slug}`} className="relative w-full sm:w-32 h-32 flex-shrink-0">
@@ -92,7 +97,10 @@ export default function CartPage() {
                       {item.name}
                     </h3>
                   </Link>
-                  <p className="text-sm text-gray-600 mb-2">Size: {item.size}</p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Size: {item.size}
+                    {item.color ? ` · ${item.color}` : ''}
+                  </p>
                   <p className="text-lg font-bold text-primary">
                     ${(item.price / 100).toFixed(2)} each
                   </p>
@@ -104,7 +112,12 @@ export default function CartPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
-                          handleQuantityChange(item.productId, item.size, item.quantity - 1)
+                          handleQuantityChange(
+                            item.productId,
+                            item.size,
+                            item.quantity - 1,
+                            item.color,
+                          )
                         }
                         className="w-8 h-8 border-2 border-gray-300 rounded-lg hover:border-primary"
                       >
@@ -113,7 +126,12 @@ export default function CartPage() {
                       <span className="w-8 text-center font-semibold">{item.quantity}</span>
                       <button
                         onClick={() =>
-                          handleQuantityChange(item.productId, item.size, item.quantity + 1)
+                          handleQuantityChange(
+                            item.productId,
+                            item.size,
+                            item.quantity + 1,
+                            item.color,
+                          )
                         }
                         className="w-8 h-8 border-2 border-gray-300 rounded-lg hover:border-primary"
                       >
@@ -129,7 +147,7 @@ export default function CartPage() {
                   </div>
 
                   <button
-                    onClick={() => handleRemove(item.productId, item.size)}
+                    onClick={() => handleRemove(item.productId, item.size, item.color)}
                     className="text-red-500 hover:text-red-700 text-sm"
                   >
                     Remove

@@ -25,6 +25,7 @@ model Product {
   major       String   // "Computer Science"
   colors      String   // JSON array as string: ["purple", "white"]
   sizes       String   // JSON object as string: {"S": 10, "M": 15, "L": 8, ...}
+  colorVariants String? // JSON [{ name, hex, front, back }, ...]; first = default
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

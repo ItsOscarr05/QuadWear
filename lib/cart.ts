@@ -6,6 +6,19 @@ export interface CartItem {
   size: string
   quantity: number
   image: string
+  /** Shirt color name when product has color variants */
+  color?: string
+}
+
+function lineMatches(
+  a: Pick<CartItem, "productId" | "size" | "color">,
+  b: Pick<CartItem, "productId" | "size" | "color">,
+): boolean {
+  return (
+    a.productId === b.productId &&
+    a.size === b.size &&
+    (a.color ?? "") === (b.color ?? "")
+  )
 }
 
 export interface Cart {
@@ -39,9 +52,7 @@ export function saveCart(cart: Cart): void {
 
 export function addToCart(item: Omit<CartItem, 'quantity'> & { quantity?: number }): Cart {
   const cart = getCart()
-  const existingIndex = cart.items.findIndex(
-    (i) => i.productId === item.productId && i.size === item.size
-  )
+  const existingIndex = cart.items.findIndex((i) => lineMatches(i, item))
 
   if (existingIndex >= 0) {
     cart.items[existingIndex].quantity += item.quantity || 1
@@ -53,9 +64,16 @@ export function addToCart(item: Omit<CartItem, 'quantity'> & { quantity?: number
   return cart
 }
 
-export function updateCartItem(productId: string, size: string, quantity: number): Cart {
+export function updateCartItem(
+  productId: string,
+  size: string,
+  quantity: number,
+  color?: string,
+): Cart {
   const cart = getCart()
-  const index = cart.items.findIndex((i) => i.productId === productId && i.size === size)
+  const index = cart.items.findIndex((i) =>
+    lineMatches(i, { productId, size, color }),
+  )
 
   if (index >= 0) {
     cart.items[index].quantity = Math.max(0, quantity)
@@ -65,9 +83,11 @@ export function updateCartItem(productId: string, size: string, quantity: number
   return cart
 }
 
-export function removeFromCart(productId: string, size: string): Cart {
+export function removeFromCart(productId: string, size: string, color?: string): Cart {
   const cart = getCart()
-  const index = cart.items.findIndex((i) => i.productId === productId && i.size === size)
+  const index = cart.items.findIndex((i) =>
+    lineMatches(i, { productId, size, color }),
+  )
   if (index >= 0) {
     cart.items.splice(index, 1)
   }

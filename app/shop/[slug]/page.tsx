@@ -9,6 +9,8 @@ import { getUniversityByName } from "@/lib/universities";
 import { majorSlugFromName } from "@/lib/majors";
 import type { ProductFromApi } from "@/lib/types/product";
 import { PRODUCT_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
+import { parseColorVariants } from "@/lib/colorVariants";
+import ColorSwatchRow from "@/components/ColorSwatchRow";
 import { EmptyStateProductMissing } from "@/components/empty-state";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -24,6 +26,7 @@ export default function ProductDetailPage() {
   const [showSizeHelp, setShowSizeHelp] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [galleryImageVisible, setGalleryImageVisible] = useState(true);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const galleryTransitionLock = useRef(false);
   const galleryTimersRef = useRef<number[]>([]);
 
@@ -74,18 +77,34 @@ export default function ProductDetailPage() {
     };
   }, [slug]);
 
+  const colorVariants = useMemo(
+    () => (product ? parseColorVariants(product.colorVariants) : []),
+    [product?.colorVariants],
+  );
+
   const galleryImages = useMemo(() => {
     if (!product) return [];
+    if (colorVariants.length > 0) {
+      const v =
+        colorVariants[selectedColorIndex] ?? colorVariants[0];
+      const urls = [v.front, v.back].filter(Boolean);
+      return [...new Set(urls)];
+    }
     const urls = [product.mockupImage, product.designImage].filter(Boolean);
     return [...new Set(urls)];
-  }, [product]);
+  }, [product, colorVariants, selectedColorIndex]);
 
   useEffect(() => {
     clearGalleryTimers();
     galleryTransitionLock.current = false;
     setImageIndex(0);
     setGalleryImageVisible(true);
+    setSelectedColorIndex(0);
   }, [product?.id]);
+
+  useEffect(() => {
+    setImageIndex(0);
+  }, [selectedColorIndex]);
 
   const goToGalleryImage = (nextIndex: number) => {
     if (
@@ -125,14 +144,16 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product) return;
 
+    const v = colorVariants[selectedColorIndex];
     addToCart({
       productId: product.id,
       name: product.name,
       slug: product.slug,
       price: product.price,
       size: selectedSize,
-      image: product.mockupImage || product.designImage,
+      image: v?.front ?? product.mockupImage ?? product.designImage,
       quantity,
+      color: v?.name,
     });
     window.dispatchEvent(new Event("cartUpdated"));
     router.push("/cart");
@@ -161,7 +182,6 @@ export default function ProductDetailPage() {
   }
 
   const badges = JSON.parse(product.badges || "[]");
-  const colors = JSON.parse(product.colors || "[]");
   const sizes = JSON.parse(product.sizes || "{}");
   const availableSizes = Object.keys(sizes).filter((size) => sizes[size] > 0);
 
@@ -272,6 +292,18 @@ export default function ProductDetailPage() {
 
           {product.description && (
             <p className="text-gray-700 mb-6">{product.description}</p>
+          )}
+
+          {colorVariants.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-semibold mb-2">Color</label>
+              <ColorSwatchRow
+                variants={colorVariants}
+                selectedIndex={selectedColorIndex}
+                onSelect={setSelectedColorIndex}
+                size="md"
+              />
+            </div>
           )}
 
           {/* Size Selector */}

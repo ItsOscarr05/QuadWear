@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: item.name,
+            name: item.color ? `${item.name} (${item.color})` : item.name,
             images: item.image ? [item.image] : [],
           },
           unit_amount: item.price,

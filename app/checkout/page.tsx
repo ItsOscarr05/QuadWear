@@ -181,9 +181,13 @@ export default function CheckoutPage() {
 
             <div className="space-y-2 mb-4">
               {cart.items.map((item) => (
-                <div key={`${item.productId}-${item.size}`} className="flex justify-between text-sm">
+                <div
+                  key={`${item.productId}-${item.size}-${item.color ?? ''}`}
+                  className="flex justify-between text-sm"
+                >
                   <span>
-                    {item.name} ({item.size}) × {item.quantity}
+                    {item.name} ({item.size}
+                    {item.color ? `, ${item.color}` : ''}) × {item.quantity}
                   </span>
                   <span>${((item.price * item.quantity) / 100).toFixed(2)}</span>
                 </div>

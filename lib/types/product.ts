@@ -23,6 +23,7 @@ export type ProductCatalog = Pick<
   | "badges"
   | "university"
   | "major"
+  | "colorVariants"
 >;
 
 /** Quick view modal: catalog fields plus optional detail fields from full product rows. */

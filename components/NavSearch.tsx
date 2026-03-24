@@ -22,12 +22,12 @@ export default function NavSearch() {
     }
     // Match on full school names only—not abbreviations or slug shortcuts (e.g. "jmu")
     const universities = UNIVERSITIES.filter((u) =>
-      u.fullName.toLowerCase().includes(q),
+      u.fullName.toLowerCase().startsWith(q),
     );
     const majors = MAJORS.filter(
       (m) =>
-        m.name.toLowerCase().includes(q) ||
-        m.slug.replace(/-/g, " ").includes(q),
+        m.name.toLowerCase().startsWith(q) ||
+        m.slug.replace(/-/g, " ").startsWith(q),
     );
     return { universities, majors };
   }, [query]);

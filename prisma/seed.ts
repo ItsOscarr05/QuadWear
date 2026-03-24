@@ -11,16 +11,34 @@ const JMU = "JMU";
  * Back-of-shirt art: `QW_back_{color}` (e.g. QW_back_lilac.png) — use for `designImage`.
  */
 const IMG = {
-  businessPurpleFront: "/products/QW_Business_purple.jpg",
-  businessPurpleBack: "/products/QW_back_purple.png",
-  businessFrontLilac: "/products/QW_Business_lilac.png",
-  backLilac: "/products/QW_back_lilac.png",
-  businessBlackFront: "/products/QW_business_black.png",
-  backBlack: "/products/QW_back_black.png",
-  businessWhiteFront: "/products/QW_Business_white.png",
-  backWhite: "/products/QW_back_white.png",
-  psychologyLilac: "/products/QW_Psychology_lilac.png",
-  computerScienceLilac: "/products/QW_Computer_Science_lilac.png",
+  businessPurpleFront:
+    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Business_Purple.jpg",
+  businessPurpleBack: "/products/Back_Designs/QW_Back_Purple.png",
+  businessFrontLilac:
+    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Business_Lilac.png",
+  backLilac: "/products/Back_Designs/QW_Back_Lilac.png",
+  businessBlackFront:
+    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Business_Black.png",
+  backBlack: "/products/Back_Designs/QW_Back_Black.png",
+  businessWhiteFront:
+    "/products/Front_Designs/James_Madison/White/QW_Dukes_Business_White.png",
+  backWhite: "/products/Back_Designs/QW_Back_White.png",
+  psychologyPurple:
+    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Psychology_Purple.jpg",
+  psychologyBlack:
+    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Psychology_Black.jpg",
+  psychologyWhite:
+    "/products/Front_Designs/James_Madison/White/QW_Dukes_Psychology_White.jpg",
+  psychologyLilac:
+    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Psychology_Lilac.png",
+  computerSciencePurple:
+    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Computer_Science_Purple.jpg",
+  computerScienceBlack:
+    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Computer_Science_Black.jpg",
+  computerScienceWhite:
+    "/products/Front_Designs/James_Madison/White/QW_Dukes_Computer_Science_White.png",
+  computerScienceLilac:
+    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Computer_Science_Lilac.png",
 };
 
 /** Default first = Purple (matches UI default). */
@@ -47,6 +65,60 @@ const JMU_BUSINESS_COLOR_VARIANTS = JSON.stringify([
     name: "Lilac",
     hex: "#C8A2C8",
     front: IMG.businessFrontLilac,
+    back: IMG.backLilac,
+  },
+]);
+
+const JMU_COMPUTER_SCIENCE_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.computerSciencePurple,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.computerScienceBlack,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.computerScienceWhite,
+    back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.computerScienceLilac,
+    back: IMG.backLilac,
+  },
+]);
+
+const JMU_PSYCHOLOGY_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.psychologyPurple,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.psychologyBlack,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.psychologyWhite,
+    back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.psychologyLilac,
     back: IMG.backLilac,
   },
 ]);
@@ -111,17 +183,17 @@ async function main() {
       name: quadwearSeededProductName(JMU, "Psychology"),
       slug: "jmu-psychology-lilac",
       description:
-        "Hand-drawn Psychology design for JMU on a lilac tee. Same back print as our JMU Business tee.",
+        "Hand-drawn Psychology design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      mockupImage: IMG.psychologyLilac,
-      designImage: IMG.backLilac,
-      colorVariants: null,
+      mockupImage: IMG.psychologyPurple,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_PSYCHOLOGY_COLOR_VARIANTS,
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Psychology",
-      colors: JSON.stringify(["lilac", "purple", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,
@@ -133,17 +205,17 @@ async function main() {
     update: {
       name: quadwearSeededProductName(JMU, "Psychology"),
       description:
-        "Hand-drawn Psychology design for JMU on a lilac tee. Same back print as our JMU Business tee.",
+        "Hand-drawn Psychology design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      mockupImage: IMG.psychologyLilac,
-      designImage: IMG.backLilac,
-      colorVariants: null,
+      mockupImage: IMG.psychologyPurple,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_PSYCHOLOGY_COLOR_VARIANTS,
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Psychology",
-      colors: JSON.stringify(["lilac", "purple", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,
@@ -160,17 +232,17 @@ async function main() {
       name: quadwearSeededProductName(JMU, "Computer Science"),
       slug: "jmu-computer-science-lilac",
       description:
-        "Hand-drawn Computer Science design for JMU on a lilac tee. Same back print as our other JMU lilac shirts.",
+        "Hand-drawn Computer Science design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      mockupImage: IMG.computerScienceLilac,
-      designImage: IMG.backLilac,
-      colorVariants: null,
+      mockupImage: IMG.computerSciencePurple,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_COMPUTER_SCIENCE_COLOR_VARIANTS,
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Computer Science",
-      colors: JSON.stringify(["lilac", "purple", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,
@@ -182,17 +254,17 @@ async function main() {
     update: {
       name: quadwearSeededProductName(JMU, "Computer Science"),
       description:
-        "Hand-drawn Computer Science design for JMU on a lilac tee. Same back print as our other JMU lilac shirts.",
+        "Hand-drawn Computer Science design for JMU. Front and back artwork on a classic tee.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
-      mockupImage: IMG.computerScienceLilac,
-      designImage: IMG.backLilac,
-      colorVariants: null,
+      mockupImage: IMG.computerSciencePurple,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_COMPUTER_SCIENCE_COLOR_VARIANTS,
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Computer Science",
-      colors: JSON.stringify(["lilac", "purple", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,

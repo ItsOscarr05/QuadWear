@@ -43,7 +43,11 @@ export default function ShopByUniversityPage() {
           <Link
             key={u.slug}
             href={`/shop/university/${u.slug}`}
-            className="card-sticker flex h-full flex-col overflow-hidden transition-all duration-200 hover:border-accent group"
+            className={`card-sticker flex h-full flex-col overflow-hidden transition-all duration-200 hover:border-accent group ${
+              u.slug !== "jmu" ? "hidden" : ""
+            }`}
+            aria-hidden={u.slug !== "jmu" || undefined}
+            tabIndex={u.slug !== "jmu" ? -1 : undefined}
           >
             <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-gray-100">
               <Image

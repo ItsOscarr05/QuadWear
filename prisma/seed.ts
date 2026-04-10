@@ -1,3 +1,4 @@
+import "./load-env";
 import { PrismaClient } from "@prisma/client";
 import { quadwearSeededProductName } from "../lib/universities";
 
@@ -39,6 +40,14 @@ const IMG = {
     "/products/Front_Designs/James_Madison/White/QW_Dukes_Computer_Science_White.png",
   computerScienceLilac:
     "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Computer_Science_Lilac.png",
+  commsPurpleFront:
+    "/products/Front_Designs/James_Madison/Purple/QW_Comms_Purple.png",
+  commsBlackFront:
+    "/products/Front_Designs/James_Madison/Black/QW_Comms_Black.png",
+  commsWhiteFront:
+    "/products/Front_Designs/James_Madison/White/QW_Comms_White.png",
+  commsLilacFront:
+    "/products/Front_Designs/James_Madison/Lilac/QW_Comms_Lilac.png",
 };
 
 /** Default first = Purple (matches UI default). */
@@ -119,6 +128,33 @@ const JMU_PSYCHOLOGY_COLOR_VARIANTS = JSON.stringify([
     name: "Lilac",
     hex: "#C8A2C8",
     front: IMG.psychologyLilac,
+    back: IMG.backLilac,
+  },
+]);
+
+const JMU_COMMUNICATIONS_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.commsPurpleFront,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.commsBlackFront,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.commsWhiteFront,
+    back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.commsLilacFront,
     back: IMG.backLilac,
   },
 ]);
@@ -275,8 +311,57 @@ async function main() {
     },
   });
 
+  await prisma.product.upsert({
+    where: { slug: "jmu-communications-qw" },
+    create: {
+      name: quadwearSeededProductName(JMU, "Communications"),
+      slug: "jmu-communications-qw",
+      description:
+        "Hand-drawn Communications design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.commsPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_COMMUNICATIONS_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Communications",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+    update: {
+      name: quadwearSeededProductName(JMU, "Communications"),
+      description:
+        "Hand-drawn Communications design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.commsPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_COMMUNICATIONS_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Communications",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+  });
+
   console.log(
-    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac (images from /public/products/)",
+    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac, jmu-communications-qw (images from /public/products/)",
   );
 }
 

@@ -16,7 +16,7 @@ A modern e-commerce website for QuadWear, selling hand-drawn university and majo
 - **Next.js 14** (App Router)
 - **TypeScript**
 - **Tailwind CSS**
-- **Prisma** (SQLite)
+- **Prisma** (PostgreSQL; Supabase-compatible)
 - **Stripe** (Payments)
 
 ## Getting Started
@@ -29,19 +29,19 @@ npm install
 2. Set up environment variables:
 ```bash
 cp .env.example .env
-# Add your Stripe keys to .env
+# Add Stripe keys and PostgreSQL URLs: DATABASE_URL (pooled) and DIRECT_URL (direct) — see .env.example
 ```
 
-3. Set up the database:
+3. Set up the database (applies migrations to your Postgres instance):
 ```bash
-npx prisma generate
-npx prisma db push
+npx prisma migrate dev
 ```
 
-4. (Optional) Seed one example product for local development:
+4. Seed the catalog (required after a fresh Postgres; migrations do not copy old SQLite data):
 ```bash
-npx prisma db seed
+npm run db:seed
 ```
+Use `npm run vercel:pull` first so `.env.local` has `DATABASE_URL` / `DIRECT_URL`, or put them in `.env`.
 
 5. Run the development server:
 ```bash
@@ -52,7 +52,7 @@ npm run dev
 
 ## Adding products (checklist)
 
-Products can be added via **Prisma Studio** (`npx prisma studio`), **`npx prisma db seed`** (example row only), or any SQL/SQLite tool against `prisma/dev.db`.
+Products can be added via **Prisma Studio** (`npx prisma studio`), **`npx prisma db seed`** (example row only), or any SQL client against your PostgreSQL database.
 
 ### Canonical `university` and `major` strings
 

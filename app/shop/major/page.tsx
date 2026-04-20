@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { EmptyStateCatalog } from "@/components/empty-state";
-import { MAJORS } from "@/lib/majors";
+import { MAJOR_CARD_IMAGE_BY_SLUG, MAJORS } from "@/lib/majors";
 
 function MajorIcon() {
   return (
@@ -55,21 +56,47 @@ export default function ShopByMajorPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {MAJORS.map((m) => (
-          <Link
-            key={m.slug}
-            href={`/shop/major/${m.slug}`}
-            className="card-sticker flex flex-col items-center justify-center p-8 text-center min-h-[160px] transition-all duration-200 hover:border-accent group"
-          >
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border-4 border-primary bg-white group-hover:border-accent">
-              <MajorIcon />
-            </div>
-            <p className="font-bold text-lg text-black group-hover:text-primary transition-colors">
-              {m.name}
-            </p>
-          </Link>
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        {MAJORS.map((m) => {
+          const cardImage = MAJOR_CARD_IMAGE_BY_SLUG[m.slug];
+          return (
+            <Link
+              key={m.slug}
+              href={`/shop/major/${m.slug}`}
+              className="card-sticker flex h-full flex-col overflow-hidden transition-all duration-200 hover:border-accent group"
+            >
+              <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-white">
+                {cardImage ? (
+                  <div className="relative h-full w-full p-2 sm:p-3">
+                    <Image
+                      src={cardImage}
+                      alt={`${m.name} design`}
+                      fill
+                      className="object-contain object-center transition-transform duration-300 group-hover:scale-[1.03]"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-full items-center justify-center p-8">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-primary bg-white group-hover:border-accent">
+                      <MajorIcon />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div
+                className="h-2 w-full shrink-0 border-b-2 border-black bg-primary"
+                aria-hidden
+              />
+              <div className="flex min-h-0 flex-1 flex-col justify-end gap-1 pt-2">
+                <p className="text-sm font-bold leading-snug text-primary sm:text-base">
+                  {m.name}
+                </p>
+                <p className="mt-1 text-xs text-gray-600">View collection →</p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

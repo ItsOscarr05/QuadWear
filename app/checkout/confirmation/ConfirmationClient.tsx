@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { clearCart } from "@/lib/cart";
 
 export default function ConfirmationClient() {
   const searchParams = useSearchParams();
@@ -10,8 +11,13 @@ export default function ConfirmationClient() {
 
   useEffect(() => {
     const order = searchParams.get("order");
+    const sessionId = searchParams.get("session_id");
     if (order) {
       setOrderNumber(order);
+    }
+    if (order && sessionId) {
+      clearCart();
+      window.dispatchEvent(new Event("cartUpdated"));
     }
   }, [searchParams]);
 

@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { getCart, getCartTotalPrice, isCartValid } from '@/lib/cart'
-import { loadStripe } from '@stripe/stripe-js'
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+import { type Cart, getCart, getCartTotalPrice, isCartValid } from '@/lib/cart'
+import { getOrderTotalCents, getShippingCents } from '@/lib/shipping'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const [cart, setCart] = useState(getCart())
+  /** Empty until client mount — `getCart()` differs between SSR (no storage) and browser (localStorage). */
+  const [cart, setCart] = useState<Cart>({ items: [] })
+  const [isClient, setIsClient] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -23,12 +23,13 @@ export default function CheckoutPage() {
   })
 
   useEffect(() => {
-    const cart = getCart()
-    if (!isCartValid(cart)) {
+    setIsClient(true)
+    const next = getCart()
+    if (!isCartValid(next)) {
       router.push('/cart')
       return
     }
-    setCart(cart)
+    setCart(next)
   }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +37,6 @@ export default function CheckoutPage() {
     setLoading(true)
 
     try {
-      const totalPrice = getCartTotalPrice(cart)
       const shipping = {
         name: `${formData.firstName} ${formData.lastName}`,
         address: formData.address,
@@ -62,23 +62,30 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Checkout failed')
       }
 
-      const stripe = await stripePromise
-      if (!stripe) {
-        throw new Error('Stripe failed to load')
+      /** Full-page redirect — avoids Stripe.js `redirectToCheckout`, which fails if publishable key ≠ account used by `STRIPE_SECRET_KEY`. */
+      if (typeof data.url === 'string' && data.url.startsWith('https://')) {
+        window.location.assign(data.url)
+        return
       }
 
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      })
-
-      if (error) {
-        throw error
-      }
+      throw new Error('Checkout did not return a valid Stripe payment link. Try again.')
     } catch (error: any) {
       console.error('Checkout error:', error)
       alert(error.message || 'Checkout failed. Please try again.')
       setLoading(false)
     }
+  }
+
+  const subtotalCents = getCartTotalPrice(cart)
+  const checkoutShippingCents = getShippingCents(subtotalCents)
+  const orderTotalCents = getOrderTotalCents(subtotalCents)
+
+  if (!isClient) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <p className="text-gray-500">Loading checkout…</p>
+      </div>
+    )
   }
 
   return (
@@ -197,18 +204,16 @@ export default function CheckoutPage() {
             <div className="border-t-2 border-gray-200 pt-4 space-y-2">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span className="font-semibold">${(getCartTotalPrice(cart) / 100).toFixed(2)}</span>
+                <span className="font-semibold">${(subtotalCents / 100).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping:</span>
-                <span>
-                  {getCartTotalPrice(cart) >= 5000 ? 'Free' : '$5.99'}
-                </span>
+                <span>{checkoutShippingCents === 0 ? 'Free' : '$5.99'}</span>
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t-2 border-gray-200">
                 <span>Total:</span>
                 <span className="text-primary">
-                  ${((getCartTotalPrice(cart) + (getCartTotalPrice(cart) >= 5000 ? 0 : 599)) / 100).toFixed(2)}
+                  ${(orderTotalCents / 100).toFixed(2)}
                 </span>
               </div>
             </div>

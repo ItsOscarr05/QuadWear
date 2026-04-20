@@ -16,6 +16,15 @@ export const MAJORS: Major[] = [
   { name: "Marketing", slug: "marketing" },
 ];
 
+/** Card art in /public/Major_Designs — add an entry when a matching asset exists. */
+export const MAJOR_CARD_IMAGE_BY_SLUG: Partial<Record<string, string>> = {
+  "computer-science": "/Major_Designs/QuadWear_Design_ComputerScience.png",
+  psychology: "/Major_Designs/QuadWear_Design_Psychology.png",
+  communications: "/Major_Designs/QuadWear_Design_Communications.png",
+  education: "/Major_Designs/QuadWear_Design_Education.png",
+  engineering: "/Major_Designs/QuadWear_Design_Engineering.png",
+};
+
 export function getMajorBySlug(slug: string): Major | undefined {
   return MAJORS.find((m) => m.slug === slug);
 }

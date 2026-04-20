@@ -12,6 +12,7 @@ import {
   getCartTotalPrice,
   isCartValid,
 } from '@/lib/cart'
+import { getOrderTotalCents, getShippingCents } from '@/lib/shipping'
 import { EmptyStateCart } from '@/components/empty-state'
 
 export default function CartPage() {
@@ -53,6 +54,8 @@ export default function CartPage() {
 
   const totalQuantity = getCartTotalQuantity(cart)
   const totalPrice = getCartTotalPrice(cart)
+  const shippingCents = getShippingCents(totalPrice)
+  const orderTotalCents = getOrderTotalCents(totalPrice)
   const isValid = isCartValid(cart)
 
   if (!isClient) {
@@ -166,12 +169,12 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Shipping:</span>
-                <span>{totalPrice >= 5000 ? 'Free' : '$5.99'}</span>
+                <span>{shippingCents === 0 ? 'Free' : '$5.99'}</span>
               </div>
               <div className="border-t-2 border-gray-200 pt-4 flex justify-between text-xl">
                 <span className="font-bold">Total:</span>
                 <span className="font-bold text-primary">
-                  ${((totalPrice + (totalPrice >= 5000 ? 0 : 599)) / 100).toFixed(2)}
+                  ${(orderTotalCents / 100).toFixed(2)}
                 </span>
               </div>
 

@@ -22,13 +22,37 @@ function normalizePostgresUrl(value) {
 
 const isPg = (u) => u.startsWith("postgres://") || u.startsWith("postgresql://");
 
+/**
+ * `migrate deploy` must use a direct DB URL (bypassing PgBouncer). Pooled 6543 URLs often hang here.
+ * Same mapping as `prisma/load-env.ts`, plus `POSTGRES_URL` / `DIRECT=DATABASE` fallbacks.
+ */
 function ensurePostgresEnv() {
   const db = normalizePostgresUrl(process.env.DATABASE_URL);
+  const direct = normalizePostgresUrl(process.env.DIRECT_URL);
+
   if (db && isPg(db)) {
     process.env.DATABASE_URL = db;
   } else if (process.env.POSTGRES_PRISMA_URL) {
     const fb = normalizePostgresUrl(process.env.POSTGRES_PRISMA_URL);
     if (fb && isPg(fb)) process.env.DATABASE_URL = fb;
+  }
+
+  if (direct && isPg(direct)) {
+    process.env.DIRECT_URL = direct;
+  } else if (process.env.POSTGRES_URL_NON_POOLING) {
+    const fb = normalizePostgresUrl(process.env.POSTGRES_URL_NON_POOLING);
+    if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
+  } else if (process.env.POSTGRES_URL) {
+    const fb = normalizePostgresUrl(process.env.POSTGRES_URL);
+    if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
+  }
+
+  if (!process.env.DIRECT_URL && process.env.DATABASE_URL) {
+    process.env.DIRECT_URL = process.env.DATABASE_URL;
+    console.warn(
+      "Prisma: DIRECT_URL not set; using DATABASE_URL. For Supabase, add DIRECT_URL or " +
+        "POSTGRES_URL (session/direct, port 5432) so `migrate` does not use the pooler."
+    );
   }
 }
 

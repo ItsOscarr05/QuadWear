@@ -11,6 +11,11 @@
       "sourceType": "well-known",
       "computedHash": "74b5f9e1e24d7662000c28d6572e438ac71847d60ea0a8704b088441355e3371"
     },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "computedHash": "8e41c7417894e6f394614ee7ca3ee5322b1e58d890255d441f42dea98732597f"
+    },
     "upgrade-stripe": {
       "source": "docs.stripe.com",
       "sourceType": "well-known",

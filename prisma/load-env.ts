@@ -34,6 +34,9 @@ function ensurePostgresEnv() {
   } else if (process.env.POSTGRES_URL_NON_POOLING) {
     const fb = normalizePostgresUrl(process.env.POSTGRES_URL_NON_POOLING);
     if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
+  } else if (process.env.POSTGRES_URL) {
+    const fb = normalizePostgresUrl(process.env.POSTGRES_URL);
+    if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
   }
 }
 

@@ -12,6 +12,7 @@ import { PRODUCT_IMAGE_DISPLAY_CLASS } from "@/lib/productImageDisplay";
 import { parseColorVariants } from "@/lib/colorVariants";
 import ColorSwatchRow from "@/components/ColorSwatchRow";
 import { EmptyStateProductMissing } from "@/components/empty-state";
+import PageBackNav from "@/components/PageBackNav";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const GALLERY_FADE_MS = 150;
@@ -27,6 +28,9 @@ export default function ProductDetailPage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [galleryImageVisible, setGalleryImageVisible] = useState(true);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [previewColorIndex, setPreviewColorIndex] = useState<number | null>(
+    null,
+  );
   const galleryTransitionLock = useRef(false);
   const galleryTimersRef = useRef<number[]>([]);
 
@@ -82,17 +86,20 @@ export default function ProductDetailPage() {
     [product?.colorVariants],
   );
 
+  const displayColorIndex =
+    previewColorIndex !== null ? previewColorIndex : selectedColorIndex;
+
   const galleryImages = useMemo(() => {
     if (!product) return [];
     if (colorVariants.length > 0) {
       const v =
-        colorVariants[selectedColorIndex] ?? colorVariants[0];
+        colorVariants[displayColorIndex] ?? colorVariants[0];
       const urls = [v.front, v.back].filter(Boolean);
       return [...new Set(urls)];
     }
     const urls = [product.mockupImage, product.designImage].filter(Boolean);
     return [...new Set(urls)];
-  }, [product, colorVariants, selectedColorIndex]);
+  }, [product, colorVariants, displayColorIndex]);
 
   useEffect(() => {
     clearGalleryTimers();
@@ -100,11 +107,12 @@ export default function ProductDetailPage() {
     setImageIndex(0);
     setGalleryImageVisible(true);
     setSelectedColorIndex(0);
+    setPreviewColorIndex(null);
   }, [product?.id]);
 
   useEffect(() => {
     setImageIndex(0);
-  }, [selectedColorIndex]);
+  }, [selectedColorIndex, previewColorIndex]);
 
   const goToGalleryImage = (nextIndex: number) => {
     if (
@@ -161,8 +169,9 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-        <p className="text-gray-500">Loading product...</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageBackNav href="/shop" label="← Back to shop" />
+        <p className="text-center text-gray-500">Loading product...</p>
       </div>
     );
   }
@@ -170,6 +179,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageBackNav href="/shop" label="← Back to shop" />
         <div className="max-w-lg mx-auto">
           <EmptyStateProductMissing>
             <Link href="/shop" className="btn-primary inline-block">
@@ -192,6 +202,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <PageBackNav href="/shop" label="← Back to shop" />
       <div className="grid md:grid-cols-[1.12fr_1fr] gap-8 mb-12">
         {/* Product image gallery (mockup + design when both exist) */}
         <div className="relative aspect-square overflow-hidden rounded-xl bg-white">
@@ -301,6 +312,7 @@ export default function ProductDetailPage() {
                 variants={colorVariants}
                 selectedIndex={selectedColorIndex}
                 onSelect={setSelectedColorIndex}
+                onPreviewIndexChange={setPreviewColorIndex}
                 size="md"
               />
             </div>

@@ -30,6 +30,9 @@ export default function ProductCard({
   const [showQuickView, setShowQuickView] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const [previewColorIndex, setPreviewColorIndex] = useState<number | null>(
+    null,
+  );
   const badges = JSON.parse(product.badges || "[]");
 
   const colorVariants = useMemo(
@@ -37,9 +40,12 @@ export default function ProductCard({
     [product.colorVariants],
   );
 
+  const imageColorIndex =
+    previewColorIndex !== null ? previewColorIndex : colorIndex;
+
   const displayImage =
     colorVariants.length > 0
-      ? (colorVariants[colorIndex]?.front ?? product.mockupImage)
+      ? (colorVariants[imageColorIndex]?.front ?? product.mockupImage)
       : product.mockupImage || product.designImage;
 
   useEffect(() => {
@@ -53,6 +59,7 @@ export default function ProductCard({
 
   useEffect(() => {
     setColorIndex(0);
+    setPreviewColorIndex(null);
   }, [product.id]);
 
   const handleWishlistToggle = () => {
@@ -170,6 +177,7 @@ export default function ProductCard({
               variants={colorVariants}
               selectedIndex={colorIndex}
               onSelect={setColorIndex}
+              onPreviewIndexChange={setPreviewColorIndex}
               size="sm"
             />
           </div>

@@ -3,6 +3,7 @@ import { Cabin_Sketch, Kalam } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import NavigationProgress from "@/components/NavigationProgress";
 
 const cabinSketch = Cabin_Sketch({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cabinSketch.variable} ${kalam.variable}`}>
       <body className="min-h-screen flex flex-col">
+        <NavigationProgress />
         <Nav />
         <main className="flex-grow">{children}</main>
         <Footer />

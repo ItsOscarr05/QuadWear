@@ -48,6 +48,22 @@ const IMG = {
     "/products/Front_Designs/James_Madison/White/QW_Comms_White.png",
   commsLilacFront:
     "/products/Front_Designs/James_Madison/Lilac/QW_Comms_Lilac.png",
+  educationPurpleFront:
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Education_Purple.png",
+  educationBlackFront:
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Education_Black.jpg",
+  educationWhiteFront:
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Education_White.jpg",
+  educationLilacFront:
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Education_Lilac.jpg",
+  engineeringPurpleFront:
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Engineering_Purple.jpg",
+  engineeringBlackFront:
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Engineering_Black.jpg",
+  engineeringWhiteFront:
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Engineering_White.jpg",
+  engineeringLilacFront:
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Engineering_Lilac.jpg",
 };
 
 /** Default first = Purple (matches UI default). */
@@ -155,6 +171,60 @@ const JMU_COMMUNICATIONS_COLOR_VARIANTS = JSON.stringify([
     name: "Lilac",
     hex: "#C8A2C8",
     front: IMG.commsLilacFront,
+    back: IMG.backLilac,
+  },
+]);
+
+const JMU_EDUCATION_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.educationPurpleFront,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.educationBlackFront,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.educationWhiteFront,
+    back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.educationLilacFront,
+    back: IMG.backLilac,
+  },
+]);
+
+const JMU_ENGINEERING_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.engineeringPurpleFront,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.engineeringBlackFront,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.engineeringWhiteFront,
+    back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.engineeringLilacFront,
     back: IMG.backLilac,
   },
 ]);
@@ -360,8 +430,106 @@ async function main() {
     },
   });
 
+  await prisma.product.upsert({
+    where: { slug: "jmu-education-qw" },
+    create: {
+      name: quadwearSeededProductName(JMU, "Education"),
+      slug: "jmu-education-qw",
+      description:
+        "Hand-drawn Education design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.educationPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_EDUCATION_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Education",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+    update: {
+      name: quadwearSeededProductName(JMU, "Education"),
+      description:
+        "Hand-drawn Education design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.educationPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_EDUCATION_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Education",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+  });
+
+  await prisma.product.upsert({
+    where: { slug: "jmu-engineering-qw" },
+    create: {
+      name: quadwearSeededProductName(JMU, "Engineering"),
+      slug: "jmu-engineering-qw",
+      description:
+        "Hand-drawn Engineering design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.engineeringPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_ENGINEERING_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Engineering",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+    update: {
+      name: quadwearSeededProductName(JMU, "Engineering"),
+      description:
+        "Hand-drawn Engineering design for JMU. Front and back artwork on a classic tee.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.engineeringPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_ENGINEERING_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Engineering",
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+  });
+
   console.log(
-    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac, jmu-communications-qw (images from /public/products/)",
+    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac, jmu-communications-qw, jmu-education-qw, jmu-engineering-qw (images from /public/products/)",
   );
 }
 

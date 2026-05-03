@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import PageBackNav from '@/components/PageBackNav'
 import { type Cart, getCart, getCartTotalPrice, isCartValid } from '@/lib/cart'
 import { getOrderTotalCents, getShippingCents } from '@/lib/shipping'
 
@@ -90,6 +91,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <PageBackNav href="/cart" label="← Back to cart" />
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">

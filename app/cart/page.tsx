@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import PageBackNav from '@/components/PageBackNav'
 import {
   getCart,
   updateCartItem,
@@ -68,6 +69,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <PageBackNav href="/shop" label="← Back to shop" />
       <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
       {cart.items.length === 0 ? (

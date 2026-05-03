@@ -50,7 +50,7 @@ export default function Nav() {
             Shop
           </Link>
           <Link
-            href="/shop/universities"
+            href="/shop/university"
             className="text-black hover:text-primary transition-colors font-bold text-lg whitespace-nowrap"
           >
             Universities

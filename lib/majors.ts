@@ -12,17 +12,19 @@ export const MAJORS: Major[] = [
   { name: "Communications", slug: "communications" },
   { name: "Education", slug: "education" },
   { name: "Engineering", slug: "engineering" },
-  { name: "Criminal Justice", slug: "criminal-justice" },
-  { name: "Marketing", slug: "marketing" },
+  { name: "Health Science", slug: "health-science" },
+  { name: "Music", slug: "music" },
 ];
 
 /** Card art in /public/Major_Designs — add an entry when a matching asset exists. */
 export const MAJOR_CARD_IMAGE_BY_SLUG: Partial<Record<string, string>> = {
+  business: "/Major_Designs/QuadWear_Design_Business.jpg",
   "computer-science": "/Major_Designs/QuadWear_Design_ComputerScience.png",
   psychology: "/Major_Designs/QuadWear_Design_Psychology.png",
   communications: "/Major_Designs/QuadWear_Design_Communications.png",
   education: "/Major_Designs/QuadWear_Design_Education.png",
   engineering: "/Major_Designs/QuadWear_Design_Engineering.png",
+  music: "/Major_Designs/QuadWear_Design_Music.png",
 };
 
 export function getMajorBySlug(slug: string): Major | undefined {

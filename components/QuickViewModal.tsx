@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import { addToCart } from '@/lib/cart'
 import { PRODUCT_IMAGE_DISPLAY_CLASS } from '@/lib/productImageDisplay'
@@ -18,6 +18,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
   const [selectedSize, setSelectedSize] = useState('M')
   const [quantity, setQuantity] = useState(1)
   const [colorIndex, setColorIndex] = useState(0)
+  const [previewColorIndex, setPreviewColorIndex] = useState<number | null>(null)
   const sizes = JSON.parse(product.sizes || '{}')
 
   const colorVariants = useMemo(
@@ -25,9 +26,16 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
     [product.colorVariants],
   )
 
+  useEffect(() => {
+    setColorIndex(0)
+    setPreviewColorIndex(null)
+  }, [product.id])
+
+  const imageColorIndex = previewColorIndex !== null ? previewColorIndex : colorIndex
+
   const displayImage =
     colorVariants.length > 0
-      ? colorVariants[colorIndex]?.front ?? product.mockupImage
+      ? colorVariants[imageColorIndex]?.front ?? product.mockupImage
       : product.mockupImage || product.designImage
 
   const availableSizes = Object.keys(sizes).filter((size) => sizes[size] > 0)
@@ -40,7 +48,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
       slug: product.slug,
       price: product.price,
       size: selectedSize,
-      image: displayImage,
+      image: v?.front ?? product.mockupImage ?? product.designImage,
       quantity,
       color: v?.name,
     })
@@ -89,6 +97,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                   variants={colorVariants}
                   selectedIndex={colorIndex}
                   onSelect={setColorIndex}
+                  onPreviewIndexChange={setPreviewColorIndex}
                   size="md"
                 />
               </div>

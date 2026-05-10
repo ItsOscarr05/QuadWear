@@ -235,7 +235,7 @@ const JMU_ENGINEERING_COLOR_VARIANTS = JSON.stringify([
   },
 ]);
 
-/** Music majors: only purple / black / white assets in repo (no lilac mockup). */
+/** Music: Purple / Black / White only (no lilac front mockup in repo). */
 const JMU_MUSIC_COLOR_VARIANTS = JSON.stringify([
   {
     name: "Purple",

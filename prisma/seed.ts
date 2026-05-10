@@ -64,6 +64,12 @@ const IMG = {
     "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Engineering_White.jpg",
   engineeringLilacFront:
     "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Engineering_Lilac.jpg",
+  musicPurpleFront:
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Music_Purple.jpg",
+  musicBlackFront:
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Music_Black.jpg",
+  musicWhiteFront:
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Music_White.jpg",
 };
 
 /** Default first = Purple (matches UI default). */
@@ -226,6 +232,28 @@ const JMU_ENGINEERING_COLOR_VARIANTS = JSON.stringify([
     hex: "#C8A2C8",
     front: IMG.engineeringLilacFront,
     back: IMG.backLilac,
+  },
+]);
+
+/** Music majors: only purple / black / white assets in repo (no lilac mockup). */
+const JMU_MUSIC_COLOR_VARIANTS = JSON.stringify([
+  {
+    name: "Purple",
+    hex: "#450084",
+    front: IMG.musicPurpleFront,
+    back: IMG.businessPurpleBack,
+  },
+  {
+    name: "Black",
+    hex: "#1a1a1a",
+    front: IMG.musicBlackFront,
+    back: IMG.backBlack,
+  },
+  {
+    name: "White",
+    hex: "#F5F5F5",
+    front: IMG.musicWhiteFront,
+    back: IMG.backWhite,
   },
 ]);
 
@@ -528,8 +556,57 @@ async function main() {
     },
   });
 
+  await prisma.product.upsert({
+    where: { slug: "jmu-music-qw" },
+    create: {
+      name: quadwearSeededProductName(JMU, "Music"),
+      slug: "jmu-music-qw",
+      description:
+        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, and white tees.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.musicPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_MUSIC_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Music",
+      colors: JSON.stringify(["purple", "black", "white"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+    update: {
+      name: quadwearSeededProductName(JMU, "Music"),
+      description:
+        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, and white tees.",
+      price: 2999,
+      material: "100% cotton",
+      fit: "Unisex",
+      mockupImage: IMG.musicPurpleFront,
+      designImage: IMG.businessPurpleBack,
+      colorVariants: JMU_MUSIC_COLOR_VARIANTS,
+      badges: JSON.stringify(["New"]),
+      university: "JMU",
+      major: "Music",
+      colors: JSON.stringify(["purple", "black", "white"]),
+      sizes: JSON.stringify({
+        S: 5,
+        M: 10,
+        L: 8,
+        XL: 4,
+        XXL: 2,
+      }),
+    },
+  });
+
   console.log(
-    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac, jmu-communications-qw, jmu-education-qw, jmu-engineering-qw (images from /public/products/)",
+    "Seeded products: jmu-business-qw, jmu-psychology-lilac, jmu-computer-science-lilac, jmu-communications-qw, jmu-education-qw, jmu-engineering-qw, jmu-music-qw (images from /public/products/)",
   );
 }
 

@@ -23,39 +23,46 @@ function normalizePostgresUrl(value) {
 
 const isPg = (u) => u.startsWith("postgres://") || u.startsWith("postgresql://");
 
+/** Read a postgres URL from `process.env[key]` after normalization */
+function pgFromEnv(key) {
+  const v = normalizePostgresUrl(process.env[key]);
+  return v && isPg(v) ? v : undefined;
+}
+
 /**
- * `migrate deploy` must use a direct DB URL (bypassing PgBouncer). Pooled 6543 URLs often hang here.
- * Same mapping as `prisma/load-env.ts`, plus `POSTGRES_URL` / `DIRECT=DATABASE` fallbacks.
+ * Vercel + Supabase often expose `POSTGRES_PRISMA_URL` / `POSTGRES_URL` but not `DATABASE_URL`.
  */
 function ensurePostgresEnv() {
-  const db = normalizePostgresUrl(process.env.DATABASE_URL);
-  const direct = normalizePostgresUrl(process.env.DIRECT_URL);
+  const pooled =
+    pgFromEnv("DATABASE_URL") ||
+    pgFromEnv("POSTGRES_PRISMA_URL") ||
+    pgFromEnv("POSTGRES_URL");
 
-  if (db && isPg(db)) {
-    process.env.DATABASE_URL = db;
-  } else if (process.env.POSTGRES_PRISMA_URL) {
-    const fb = normalizePostgresUrl(process.env.POSTGRES_PRISMA_URL);
-    if (fb && isPg(fb)) process.env.DATABASE_URL = fb;
+  if (pooled) {
+    process.env.DATABASE_URL = pooled;
   }
 
-  if (direct && isPg(direct)) {
+  const direct =
+    pgFromEnv("DIRECT_URL") ||
+    pgFromEnv("POSTGRES_URL_NON_POOLING") ||
+    pgFromEnv("POSTGRES_URL");
+
+  if (direct) {
     process.env.DIRECT_URL = direct;
-  } else if (process.env.POSTGRES_URL_NON_POOLING) {
-    const fb = normalizePostgresUrl(process.env.POSTGRES_URL_NON_POOLING);
-    if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
-  } else if (process.env.POSTGRES_URL) {
-    const fb = normalizePostgresUrl(process.env.POSTGRES_URL);
-    if (fb && isPg(fb)) process.env.DIRECT_URL = fb;
   }
 
   if (!process.env.DIRECT_URL && process.env.DATABASE_URL) {
     process.env.DIRECT_URL = process.env.DATABASE_URL;
     console.warn(
-      "Prisma: DIRECT_URL not set; using DATABASE_URL. For Supabase, add DIRECT_URL or " +
-        "POSTGRES_URL (session/direct, port 5432) so `migrate` does not use the pooler."
+      "Prisma: DIRECT_URL not set; using DATABASE_URL. Prefer POSTGRES_URL_NON_POOLING or a direct " +
+        ":5432 URL for migrations so migrate does not use the pooler.",
     );
   }
 }
+
+/** `prisma generate` / `validate` never connect — schema still requires a datasource URL key */
+const PRISMA_CODEGEN_DUMMY_URL =
+  "postgresql://prisma:prisma@127.0.0.1:5432/prisma_placeholder?schema=public";
 
 ensurePostgresEnv();
 
@@ -64,6 +71,22 @@ ensurePostgresEnv();
  * session/direct URL. Temporarily swap `DATABASE_URL` to `DIRECT_URL` for `prisma migrate` only.
  */
 function spawnPrisma(prismaArgs) {
+  let codegenSnapshot = undefined;
+  let usedCodegenDummy = false;
+  const sub = prismaArgs[0];
+  if (sub === "generate" || sub === "validate") {
+    const hasDb = pgFromEnv("DATABASE_URL");
+    if (!hasDb) {
+      codegenSnapshot = process.env.DATABASE_URL;
+      process.env.DATABASE_URL = PRISMA_CODEGEN_DUMMY_URL;
+      usedCodegenDummy = true;
+      console.warn(
+        "Prisma: no DATABASE_URL/POSTGRES_* at generate time — using dummy URL " +
+          "(no DB connection). Map POSTGRES_URL to DATABASE_URL or set DATABASE_URL on Vercel.",
+      );
+    }
+  }
+
   const needDirect = prismaArgs[0] === "migrate";
   const pooledRuntimeUrl = process.env.DATABASE_URL;
   if (needDirect && pooledRuntimeUrl) {
@@ -81,6 +104,13 @@ function spawnPrisma(prismaArgs) {
     if (needDirect && pooledRuntimeUrl !== undefined) {
       process.env.DATABASE_URL = pooledRuntimeUrl;
     }
+    if (usedCodegenDummy) {
+      if (codegenSnapshot !== undefined) {
+        process.env.DATABASE_URL = codegenSnapshot;
+      } else {
+        delete process.env.DATABASE_URL;
+      }
+    }
   }
 }
 
@@ -97,10 +127,17 @@ if (args[0] === "ci-build") {
   const migrations = spawnPrisma(["migrate", "deploy"]);
   if (migrations.status !== 0) process.exit(migrations.status ?? 1);
 
+  const buildDbUrl = pgFromEnv("DATABASE_URL") || PRISMA_CODEGEN_DUMMY_URL;
+  if (buildDbUrl === PRISMA_CODEGEN_DUMMY_URL) {
+    console.warn(
+      "Prisma: DATABASE_URL still missing before next build — using dummy for bundling. " +
+        "Fix Vercel env (POSTGRES_URL / POSTGRES_PRISMA_URL / DATABASE_URL) for runtime DB access.",
+    );
+  }
   const next = spawnSync("npx", ["next", "build"], {
     stdio: "inherit",
     shell: true,
-    env: process.env,
+    env: { ...process.env, DATABASE_URL: buildDbUrl },
   });
   process.exit(next.status ?? 1);
 }

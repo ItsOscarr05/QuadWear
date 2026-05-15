@@ -27,6 +27,9 @@ function ensurePostgresEnv() {
   } else if (process.env.POSTGRES_PRISMA_URL) {
     const fb = normalizePostgresUrl(process.env.POSTGRES_PRISMA_URL);
     if (fb && isPg(fb)) process.env.DATABASE_URL = fb;
+  } else if (process.env.POSTGRES_URL) {
+    const fb = normalizePostgresUrl(process.env.POSTGRES_URL);
+    if (fb && isPg(fb)) process.env.DATABASE_URL = fb;
   }
 
   if (direct && isPg(direct)) {

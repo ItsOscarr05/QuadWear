@@ -1,6 +1,7 @@
 /**
- * Runs Prisma CLI after loading `.env` then `.env.local` (override).
- * Maps Vercel/Supabase `POSTGRES_PRISMA_URL` → `DATABASE_URL` (same as `prisma/load-env.ts`).
+ * Loads `.env` / `.env.local`, maps Supabase/Vercel `POSTGRES_*` → DATABASE_URL (+ DIRECT_URL for migrations).
+ * Prisma schema only declares `DATABASE_URL` (supabase pool). For `prisma migrate *`, DATABASE_URL is
+ * temporarily swapped to DIRECT_URL so deploy does not hang on PgBouncer.
  */
 const { config } = require("dotenv");
 const { resolve } = require("path");
@@ -58,6 +59,31 @@ function ensurePostgresEnv() {
 
 ensurePostgresEnv();
 
+/**
+ * Schema uses a single `DATABASE_URL` (pooled — what the app uses). Migrations must hit a
+ * session/direct URL. Temporarily swap `DATABASE_URL` to `DIRECT_URL` for `prisma migrate` only.
+ */
+function spawnPrisma(prismaArgs) {
+  const needDirect = prismaArgs[0] === "migrate";
+  const pooledRuntimeUrl = process.env.DATABASE_URL;
+  if (needDirect && pooledRuntimeUrl) {
+    const d = normalizePostgresUrl(process.env.DIRECT_URL);
+    const migrateUrl = d && isPg(d) ? d : pooledRuntimeUrl;
+    process.env.DATABASE_URL = migrateUrl;
+  }
+  try {
+    return spawnSync("npx", ["prisma", ...prismaArgs], {
+      stdio: "inherit",
+      shell: true,
+      env: process.env,
+    });
+  } finally {
+    if (needDirect && pooledRuntimeUrl !== undefined) {
+      process.env.DATABASE_URL = pooledRuntimeUrl;
+    }
+  }
+}
+
 const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error(
@@ -68,15 +94,7 @@ if (args.length === 0) {
 
 /** Run prisma migrate deploy then next build under the same patched env (Vercel: DIRECT_URL synth). */
 if (args[0] === "ci-build") {
-  const migrations = spawnSync(
-    "npx",
-    ["prisma", "migrate", "deploy"],
-    {
-      stdio: "inherit",
-      shell: true,
-      env: process.env,
-    },
-  );
+  const migrations = spawnPrisma(["migrate", "deploy"]);
   if (migrations.status !== 0) process.exit(migrations.status ?? 1);
 
   const next = spawnSync("npx", ["next", "build"], {
@@ -103,10 +121,6 @@ if (args[0] === "exec") {
   process.exit(result.status ?? 1);
 }
 
-const result = spawnSync("npx", ["prisma", ...args], {
-  stdio: "inherit",
-  shell: true,
-  env: process.env,
-});
+const result = spawnPrisma(args);
 
 process.exit(result.status ?? 1);

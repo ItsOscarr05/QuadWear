@@ -12,7 +12,7 @@
     "lint": "next lint",
     "postinstall": "node scripts/prisma-env.cjs generate",
     "db:migrate": "node scripts/prisma-env.cjs migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:dev": "node scripts/prisma-env.cjs migrate dev",
     "db:migrate:resolve-init-applied": "node scripts/prisma-env.cjs migrate resolve --applied 20250409120000_init_postgresql",
     "db:seed": "prisma db seed",
     "make-circular-favicons": "node scripts/make-circular-favicons.js",

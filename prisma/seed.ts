@@ -13,41 +13,41 @@ const JMU = "JMU";
  */
 const IMG = {
   businessPurpleFront:
-    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Business_Purple.jpg",
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Business_Purple.jpg",
   businessPurpleBack: "/products/Back_Designs/QW_Back_Purple.png",
   businessFrontLilac:
-    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Business_Lilac.png",
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Business_Lilac.png",
   backLilac: "/products/Back_Designs/QW_Back_Lilac.png",
   businessBlackFront:
-    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Business_Black.png",
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Business_Black.png",
   backBlack: "/products/Back_Designs/QW_Back_Black.png",
   businessWhiteFront:
-    "/products/Front_Designs/James_Madison/White/QW_Dukes_Business_White.png",
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Business_White.png",
   backWhite: "/products/Back_Designs/QW_Back_White.png",
   psychologyPurple:
-    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Psychology_Purple.jpg",
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Psychology_Purple.jpg",
   psychologyBlack:
-    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Psychology_Black.jpg",
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Psychology_Black.jpg",
   psychologyWhite:
-    "/products/Front_Designs/James_Madison/White/QW_Dukes_Psychology_White.jpg",
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Psychology_White.jpg",
   psychologyLilac:
-    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Psychology_Lilac.png",
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Psychology_Lilac.png",
   computerSciencePurple:
-    "/products/Front_Designs/James_Madison/Purple/QW_Dukes_Computer_Science_Purple.jpg",
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Computer_Science_Purple.jpg",
   computerScienceBlack:
-    "/products/Front_Designs/James_Madison/Black/QW_Dukes_Computer_Science_Black.jpg",
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Computer_Science_Black.jpg",
   computerScienceWhite:
-    "/products/Front_Designs/James_Madison/White/QW_Dukes_Computer_Science_White.png",
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Computer_Science_White.png",
   computerScienceLilac:
-    "/products/Front_Designs/James_Madison/Lilac/QW_Dukes_Computer_Science_Lilac.png",
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Computer_Science_Lilac.png",
   commsPurpleFront:
-    "/products/Front_Designs/James_Madison/Purple/QW_Comms_Purple.png",
+    "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Communications_Purple.png",
   commsBlackFront:
-    "/products/Front_Designs/James_Madison/Black/QW_Comms_Black.png",
+    "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Communications_Black.png",
   commsWhiteFront:
-    "/products/Front_Designs/James_Madison/White/QW_Comms_White.png",
+    "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Communications_White.png",
   commsLilacFront:
-    "/products/Front_Designs/James_Madison/Lilac/QW_Comms_Lilac.png",
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Communications_Lilac.png",
   educationPurpleFront:
     "/products/Front_Designs/James_Madison/Purple/QuadWear_Dukes_Education_Purple.png",
   educationBlackFront:
@@ -70,6 +70,8 @@ const IMG = {
     "/products/Front_Designs/James_Madison/Black/QuadWear_Dukes_Music_Black.jpg",
   musicWhiteFront:
     "/products/Front_Designs/James_Madison/White/QuadWear_Dukes_Music_White.jpg",
+  musicLilacFront:
+    "/products/Front_Designs/James_Madison/Lilac/QuadWear_Dukes_Music_Lilac.jpg",
 };
 
 /** Default first = Purple (matches UI default). */
@@ -235,7 +237,6 @@ const JMU_ENGINEERING_COLOR_VARIANTS = JSON.stringify([
   },
 ]);
 
-/** Music: Purple / Black / White only (no lilac front mockup in repo). */
 const JMU_MUSIC_COLOR_VARIANTS = JSON.stringify([
   {
     name: "Purple",
@@ -254,6 +255,12 @@ const JMU_MUSIC_COLOR_VARIANTS = JSON.stringify([
     hex: "#F5F5F5",
     front: IMG.musicWhiteFront,
     back: IMG.backWhite,
+  },
+  {
+    name: "Lilac",
+    hex: "#C8A2C8",
+    front: IMG.musicLilacFront,
+    back: IMG.backLilac,
   },
 ]);
 
@@ -562,7 +569,7 @@ async function main() {
       name: quadwearSeededProductName(JMU, "Music"),
       slug: "jmu-music-qw",
       description:
-        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, and white tees.",
+        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, white, and lilac tees.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
@@ -572,7 +579,7 @@ async function main() {
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Music",
-      colors: JSON.stringify(["purple", "black", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,
@@ -584,7 +591,7 @@ async function main() {
     update: {
       name: quadwearSeededProductName(JMU, "Music"),
       description:
-        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, and white tees.",
+        "Hand-drawn Music design for JMU. Front and back artwork on a classic tee. Available on purple, black, white, and lilac tees.",
       price: 2999,
       material: "100% cotton",
       fit: "Unisex",
@@ -594,7 +601,7 @@ async function main() {
       badges: JSON.stringify(["New"]),
       university: "JMU",
       major: "Music",
-      colors: JSON.stringify(["purple", "black", "white"]),
+      colors: JSON.stringify(["purple", "black", "white", "lilac"]),
       sizes: JSON.stringify({
         S: 5,
         M: 10,

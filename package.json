@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/prisma-env.cjs migrate deploy && next build",
+    "build": "node scripts/prisma-env.cjs ci-build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "node scripts/prisma-env.cjs generate",

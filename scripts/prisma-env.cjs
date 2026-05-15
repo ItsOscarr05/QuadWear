@@ -60,8 +60,47 @@ ensurePostgresEnv();
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error("Usage: node scripts/prisma-env.cjs <prisma args...>");
+  console.error(
+    "Usage:\n  node scripts/prisma-env.cjs <prisma args...>\n  node scripts/prisma-env.cjs ci-build\n  node scripts/prisma-env.cjs exec <command> [args...]",
+  );
   process.exit(1);
+}
+
+/** Run prisma migrate deploy then next build under the same patched env (Vercel: DIRECT_URL synth). */
+if (args[0] === "ci-build") {
+  const migrations = spawnSync(
+    "npx",
+    ["prisma", "migrate", "deploy"],
+    {
+      stdio: "inherit",
+      shell: true,
+      env: process.env,
+    },
+  );
+  if (migrations.status !== 0) process.exit(migrations.status ?? 1);
+
+  const next = spawnSync("npx", ["next", "build"], {
+    stdio: "inherit",
+    shell: true,
+    env: process.env,
+  });
+  process.exit(next.status ?? 1);
+}
+
+/** Run an arbitrary command with the same postgres env as Prisma (e.g. exec next build). */
+if (args[0] === "exec") {
+  const rest = args.slice(1);
+  if (rest.length === 0) {
+    console.error("exec requires a command, e.g. exec next build");
+    process.exit(1);
+  }
+  const [cmd, ...cmdArgs] = rest;
+  const result = spawnSync(cmd, cmdArgs, {
+    stdio: "inherit",
+    shell: true,
+    env: process.env,
+  });
+  process.exit(result.status ?? 1);
 }
 
 const result = spawnSync("npx", ["prisma", ...args], {
